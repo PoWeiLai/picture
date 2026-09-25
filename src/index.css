@@ -579,3 +579,147 @@ textarea { resize: vertical; }
 .nav .sound-toggle { display: inline-flex; align-items: center; gap: 0.35rem; }
 .sound-toggle svg { width: 1.15em; height: 1.15em; flex: none; }
 .sound-toggle[aria-pressed='false'] { opacity: 0.6; }
+
+/* ---------- 捲軸（往下展開的羊皮紙） ---------- */
+:root {
+  --paper: #f1e2bf;
+  --paper-ink: #3a2414;
+  --paper-soft: #6b4a2a;
+  --paper-edge: rgb(120 80 30 / 0.3);
+}
+.scroll-paper { position: relative; max-width: 34em; margin: 1.5rem auto; padding: 0 18px; }
+.scroll-rod,
+.scroll-rod:hover {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: calc(100% + 36px);
+  height: 18px;
+  margin: 0 -18px;
+  padding: 0;
+  border: none;
+  border-radius: 9px;
+  background: linear-gradient(180deg, #8a5628 0%, #5a3216 35%, #2e170a 62%, #6e4020 100%);
+  box-shadow: 0 5px 10px rgb(0 0 0 / 0.6), inset 0 1px 0 rgb(255 220 170 / 0.3);
+  filter: none;
+  cursor: pointer;
+}
+/* 兩端的金色軸頭 */
+.scroll-rod::before,
+.scroll-rod::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  width: 16px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--gold-metal);
+  box-shadow: 0 2px 5px rgb(0 0 0 / 0.6), inset 0 0 0 1px rgb(255 244 200 / 0.6);
+}
+.scroll-rod::before { left: -10px; }
+.scroll-rod::after { right: -10px; }
+.scroll-sheet {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 1.4s cubic-bezier(0.45, 0.05, 0.3, 1);
+  background:
+    linear-gradient(180deg, rgb(60 30 10 / 0.4), transparent 16px, transparent calc(100% - 16px), rgb(60 30 10 / 0.4)),
+    linear-gradient(90deg, var(--paper-edge), transparent 7%, transparent 93%, var(--paper-edge)),
+    var(--paper);
+  color: var(--paper-ink);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.55);
+}
+.scroll-paper.open .scroll-sheet { grid-template-rows: 1fr; }
+.scroll-content { min-height: 0; overflow: hidden; padding: 0 1.75rem; text-align: justify; }
+.scroll-content > :first-child { margin-top: 1.5rem; }
+.scroll-content > :last-child { margin-bottom: 1.5rem; }
+.scroll-content .hero-intro, .scroll-content .description { max-width: none; margin-left: 0; margin-right: 0; }
+.scroll-paper .hero-intro::first-letter,
+.scroll-paper .description::first-letter { color: var(--crimson); text-shadow: none; }
+.scroll-note {
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--paper-soft);
+  border-top: 1px solid var(--paper-edge);
+  padding-top: 0.6rem;
+}
+.description-scroll { margin-top: 2.5rem; max-width: 38em; }
+
+/* ---------- 書本（畫家頁） ---------- */
+.book { perspective: 2000px; }
+.book-cover {
+  position: relative;
+  padding: 16px 16px 16px 30px;
+  background: linear-gradient(135deg, #6a121a 0%, #420a10 55%, #2a070a 100%);
+  border-radius: 4px 12px 12px 4px;
+  box-shadow:
+    inset 0 0 0 2px #7a1a20,
+    inset 0 0 0 6px rgb(0 0 0 / 0.35),
+    inset 0 0 0 7px var(--gold-lo),
+    0 28px 55px var(--shadow);
+}
+/* 書脊 */
+.book-cover::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 18px;
+  border-radius: 4px 0 0 4px;
+  background:
+    linear-gradient(180deg, transparent 12%, var(--gold-mid) 12% 13.5%, transparent 13.5% 86.5%, var(--gold-mid) 86.5% 88%, transparent 88%),
+    linear-gradient(90deg, #1e0508, #5a0f16 60%, #2a070a);
+}
+.book-pages { display: grid; position: relative; transform-style: preserve-3d; }
+.book-page {
+  grid-area: 1 / 1;
+  position: relative;
+  padding: 2rem 2.25rem 3rem;
+  background:
+    linear-gradient(90deg, rgb(60 30 10 / 0.35), transparent 22px),
+    var(--paper);
+  color: var(--paper-ink);
+  transform-origin: left center;
+  backface-visibility: hidden;
+  transition: transform 1s cubic-bezier(0.6, 0.05, 0.3, 1), box-shadow 1s;
+  box-shadow: 2px 0 0 #e3cfa2, 4px 0 0 #d5bf8f, 6px 1px 0 #c9b281;
+  cursor: pointer;
+}
+.book-page.turned { transform: rotateY(-178deg); pointer-events: none; box-shadow: -18px 0 30px rgb(0 0 0 / 0.35); }
+.book-title {
+  text-align: center;
+  color: var(--crimson);
+  font-size: 1.3rem;
+  letter-spacing: 0.4em;
+  margin: 0 0 1.25rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--paper-edge);
+}
+.book-body p { text-align: justify; margin: 0 0 1rem; }
+.book-body h3 { color: var(--crimson); font-size: 1rem; letter-spacing: 0.3em; margin: 1.25rem 0 0.25rem; }
+.book-body h3:first-child { margin-top: 0; }
+.book .about-lead::first-letter { color: var(--crimson); text-shadow: none; }
+.book .about-quote { color: var(--crimson); background: linear-gradient(90deg, rgb(142 27 34 / 0.1), transparent); border-left-color: var(--gold-lo); margin-top: 1.25rem; }
+.book .honours li { border-bottom-color: var(--paper-edge); }
+.book .honours li::before { color: #a07426; }
+.book-folio {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.9rem;
+  text-align: center;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--paper-soft);
+}
+.book-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; padding: 0 0.5rem; }
+.book-nav .link-button:disabled { opacity: 0.35; }
+.about { align-items: start; }
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-sheet, .book-page { transition: none; }
+}
+@media (max-width: 760px) {
+  .book-page { padding: 1.5rem 1.4rem 2.75rem; }
+  .scroll-content { padding: 0 1.1rem; }
+}

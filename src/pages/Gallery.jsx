@@ -6,6 +6,7 @@ import { toRoman } from '../lib/video'
 import { WorkThumb } from '../components/WorkMedia'
 import Ornament from '../components/Ornament'
 import { HERO } from '../siteConfig'
+import ScrollPaper from '../components/ScrollPaper'
 
 const KINDS = [
   { value: '', label: '全部' },
@@ -32,8 +33,10 @@ function Hero() {
         <h1 className="hero-title">{HERO.title}</h1>
         <p className="hero-subtitle">{HERO.subtitle}</p>
         <Ornament />
-        <p className="hero-intro">{HERO.intro}</p>
-        <p className="muted">{HERO.exhibition}</p>
+        <ScrollPaper className="hero-scroll">
+          <p className="hero-intro">{HERO.intro}</p>
+          <p className="scroll-note">{HERO.exhibition}</p>
+        </ScrollPaper>
         <div className="hero-actions">
           <a href="#collection" className="button">瀏覽典藏</a>
           <a href={HERO.link} target="_blank" rel="noreferrer">展覽介紹 ↗</a>

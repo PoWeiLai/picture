@@ -1,7 +1,46 @@
 import { Link } from 'react-router-dom'
 import { ARTIST } from '../siteConfig'
 import Ornament from '../components/Ornament'
+import Book from '../components/Book'
 import { swing } from '../lib/motion'
+
+const PAGES = [
+  {
+    title: '創作理念',
+    content: (
+      <>
+        <p className="about-lead">{ARTIST.lead}</p>
+        <p>{ARTIST.paragraphs[0]}</p>
+      </>
+    ),
+  },
+  {
+    title: '光影與記憶',
+    content: (
+      <>
+        {ARTIST.paragraphs.slice(1).map((p) => (
+          <p key={p.slice(0, 12)}>{p}</p>
+        ))}
+        <blockquote className="about-quote">{ARTIST.quote}</blockquote>
+      </>
+    ),
+  },
+  {
+    title: '獲獎與展覽',
+    content: (
+      <>
+        <h3>獲獎</h3>
+        <ul className="honours">
+          {ARTIST.awards.map((a) => <li key={a}>{a}</li>)}
+        </ul>
+        <h3>展覽經歷</h3>
+        <ul className="honours">
+          {ARTIST.exhibitions.map((e) => <li key={e}>{e}</li>)}
+        </ul>
+      </>
+    ),
+  },
+]
 
 export default function About() {
   return (
@@ -25,28 +64,7 @@ export default function About() {
           </figcaption>
         </figure>
 
-        <div className="about-text">
-          <p className="about-lead">{ARTIST.lead}</p>
-          {ARTIST.paragraphs.map((p) => (
-            <p key={p.slice(0, 12)}>{p}</p>
-          ))}
-          <blockquote className="about-quote">{ARTIST.quote}</blockquote>
-        </div>
-      </section>
-
-      <section className="about-columns">
-        <div className="panel">
-          <h2>獲獎</h2>
-          <ul className="honours">
-            {ARTIST.awards.map((a) => <li key={a}>{a}</li>)}
-          </ul>
-        </div>
-        <div className="panel">
-          <h2>展覽經歷</h2>
-          <ul className="honours">
-            {ARTIST.exhibitions.map((e) => <li key={e}>{e}</li>)}
-          </ul>
-        </div>
+        <Book pages={PAGES} />
       </section>
 
       <p className="center">

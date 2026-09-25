@@ -6,6 +6,7 @@ import { useAuth } from '../AuthContext'
 import { WorkPlayer } from '../components/WorkMedia'
 import { swing } from '../lib/motion'
 import { pour } from '../lib/sounds'
+import ScrollPaper from '../components/ScrollPaper'
 import Ornament from '../components/Ornament'
 
 export default function PaintingDetail() {
@@ -80,7 +81,11 @@ export default function PaintingDetail() {
         </span>
       </div>
 
-      {work.description && <p className="description">{work.description}</p>}
+      {work.description && (
+        <ScrollPaper key={work.id} className="description-scroll">
+          <p className="description">{work.description}</p>
+        </ScrollPaper>
+      )}
 
       <section className="guestbook">
         <Ornament />

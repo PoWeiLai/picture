@@ -210,4 +210,41 @@ export function pour() {
   }
 }
 
-export const SOUNDS = { clink, pageFlip, wind, pour }
+// 展開捲軸：較長、較低沉的紙張摩擦聲，最後木軸輕輕一頓
+export function unroll() {
+  const c = audio()
+  if (!c || c.state !== 'running') return // 尚未有使用者互動時不發聲
+  const now = c.currentTime
+  const dur = 1.3
+  const n = noiseSource(c)
+  const bp = c.createBiquadFilter()
+  bp.type = 'bandpass'
+  bp.Q.value = 0.7
+  bp.frequency.setValueAtTime(1400, now)
+  bp.frequency.exponentialRampToValueAtTime(2600, now + dur * 0.5)
+  bp.frequency.exponentialRampToValueAtTime(900, now + dur)
+  const g = c.createGain()
+  const curve = new Float32Array(48)
+  for (let i = 0; i < curve.length; i++) {
+    const x = i / (curve.length - 1)
+    const shape = Math.sin(Math.PI * Math.pow(x, 0.6)) * (1 - x * 0.4)
+    const grain = 0.7 + 0.3 * Math.sin(x * 70) * Math.sin(x * 23)
+    curve[i] = Math.max(0.0001, 0.12 * shape * grain)
+  }
+  g.gain.setValueCurveAtTime(curve, now, dur)
+  n.connect(bp).connect(g).connect(master)
+  n.start(now, Math.random())
+  n.stop(now + dur + 0.05)
+
+  // 木軸落定
+  const thud = c.createOscillator()
+  thud.type = 'sine'
+  thud.frequency.setValueAtTime(180, now + dur - 0.05)
+  thud.frequency.exponentialRampToValueAtTime(90, now + dur + 0.12)
+  const tg = envelope(c, 0.22, 0.005, 0.16, now + dur - 0.05)
+  thud.connect(tg).connect(master)
+  thud.start(now + dur - 0.05)
+  thud.stop(now + dur + 0.25)
+}
+
+export const SOUNDS = { clink, pageFlip, wind, pour, unroll }
