@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { swing, prefersReducedMotion } from '../lib/motion'
 import { supabase } from '../lib/supabase'
 import { toRoman } from '../lib/video'
 import { WorkThumb } from '../components/WorkMedia'
@@ -16,7 +17,7 @@ function Hero() {
   return (
     <section className="hero">
       <figure className="hero-art">
-        <div className="frame large">
+        <div className="frame large hang" onClick={(e) => swing(e.currentTarget)}>
           <div className="frame-mat">
             <img src={HERO.image} alt={HERO.artwork.title} />
           </div>
@@ -47,6 +48,7 @@ export default function Gallery() {
   const [works, setWorks] = useState(null)
   const [error, setError] = useState('')
   const [params, setParams] = useSearchParams()
+  const navigate = useNavigate()
   const activeCategory = params.get('category') ?? ''
   const kind = params.get('kind') ?? ''
 
@@ -67,6 +69,14 @@ export default function Gallery() {
       setWorks(data ?? [])
     })
   }, [activeCategory, kind])
+
+  // 點擊畫作：先讓畫框擺盪一下，再進入作品頁
+  function openWork(e, id) {
+    if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || prefersReducedMotion()) return
+    e.preventDefault()
+    swing(e.currentTarget.querySelector('.frame'))
+    setTimeout(() => navigate(`/paintings/${id}`), 450)
+  }
 
   function update(key, value) {
     const next = new URLSearchParams(params)
@@ -117,8 +127,14 @@ export default function Gallery() {
         <p className="muted center">這裡還沒有作品。</p>
       ) : (
         <div className="salon">
-          {works.map((w) => (
-            <Link key={w.id} to={`/paintings/${w.id}`} className="salon-item">
+          {works.map((w, i) => (
+            <Link
+              key={w.id}
+              to={`/paintings/${w.id}`}
+              className="salon-item"
+              style={{ '--i': i }}
+              onClick={(e) => openWork(e, w.id)}
+            >
               <div className="frame">
                 <div className="frame-mat">
                   <WorkThumb work={w} />

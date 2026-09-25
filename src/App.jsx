@@ -12,6 +12,7 @@ import { isDemo } from './lib/supabase'
 import Ornament from './components/Ornament'
 import { toRoman } from './lib/video'
 import { SITE_NAME } from './siteConfig'
+import { useSoundEffects, SoundToggle } from './components/SoundEffects'
 
 function Header() {
   const { user, profile, isAdmin } = useAuth()
@@ -46,6 +47,7 @@ function Header() {
               <NavLink to="/register">註冊</NavLink>
             </>
           )}
+          <SoundToggle />
         </nav>
       </div>
     </header>
@@ -61,6 +63,8 @@ function RequireAuth({ children, admin = false }) {
 }
 
 export default function App() {
+  useSoundEffects()
+
   return (
     <>
       {isDemo && (

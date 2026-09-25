@@ -4,6 +4,8 @@ import { supabase, formatDate } from '../lib/supabase'
 import { toRoman } from '../lib/video'
 import { useAuth } from '../AuthContext'
 import { WorkPlayer } from '../components/WorkMedia'
+import { swing } from '../lib/motion'
+import { pour } from '../lib/sounds'
 import Ornament from '../components/Ornament'
 
 export default function PaintingDetail() {
@@ -44,6 +46,7 @@ export default function PaintingDetail() {
     setSending(false)
     if (error) return setError('送出失敗：' + error.message)
     setBody('')
+    pour()
     loadComments()
   }
 
@@ -60,7 +63,7 @@ export default function PaintingDetail() {
     <main className="container narrow">
       <Link to="/" className="back">← 回到畫廊</Link>
 
-      <div className="frame large">
+      <div key={work.id} className="frame large hang" onClick={(e) => swing(e.currentTarget)}>
         <div className="frame-mat">
           <WorkPlayer work={work} />
         </div>

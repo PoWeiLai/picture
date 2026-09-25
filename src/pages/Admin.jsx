@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase'
 import { parseVideo } from '../lib/video'
 import { WorkThumb, WorkPlayer } from '../components/WorkMedia'
 import Ornament from '../components/Ornament'
+import { pour } from '../lib/sounds'
 
 async function uploadImage(file) {
   const ext = file.name.split('.').pop().toLowerCase()
@@ -91,6 +92,7 @@ function ImageImport({ categories, onUploaded }) {
         ? `完成，但有 ${failed.length} 張失敗（留在下方，可再試一次）`
         : '全部匯入完成！',
     )
+    if (failed.length < items.length) pour()
     onUploaded()
   }
 
@@ -174,6 +176,7 @@ function VideoImport({ categories, onUploaded }) {
       setCover(null)
       e.target.reset()
       setMsg('影片已匯入！')
+      pour()
       onUploaded()
     } catch (err) {
       setMsg(err.message)

@@ -537,3 +537,45 @@ textarea { resize: vertical; }
   .frame.large::before { inset: 7px; }
   .salon { column-gap: 1.5rem; }
 }
+
+/* ---------- 畫框動態：進場落下、點擊擺盪 ---------- */
+/* 以畫框上方的掛釘為轉軸 */
+.frame { transform-origin: 50% -16px; cursor: pointer; }
+.frame.small { cursor: default; }
+
+@keyframes hang-in {
+  0%   { opacity: 0; transform: translateY(-22px) rotate(-2.4deg); }
+  45%  { opacity: 1; transform: translateY(3px) rotate(1.6deg); }
+  65%  { transform: translateY(-1px) rotate(-0.9deg); }
+  82%  { transform: translateY(0) rotate(0.4deg); }
+  100% { opacity: 1; transform: none; }
+}
+
+@keyframes swing {
+  0%   { transform: rotate(0); }
+  14%  { transform: rotate(3.4deg); }
+  30%  { transform: rotate(-2.6deg); }
+  47%  { transform: rotate(1.7deg); }
+  63%  { transform: rotate(-1deg); }
+  79%  { transform: rotate(0.45deg); }
+  100% { transform: rotate(0); }
+}
+
+.salon-item {
+  transform-origin: 50% 0;
+  animation: hang-in 1.2s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+  animation-delay: calc(var(--i, 0) * 110ms);
+}
+.frame.hang { animation: hang-in 1.2s cubic-bezier(0.2, 0.7, 0.3, 1) both; }
+.frame.swinging,
+.salon-item .frame.swinging,
+.salon-item:hover .frame.swinging { animation: swing 0.95s cubic-bezier(0.3, 0.6, 0.4, 1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .salon-item, .frame.hang, .frame.swinging { animation: none !important; }
+}
+
+/* 音效開關 */
+.nav .sound-toggle { display: inline-flex; align-items: center; gap: 0.35rem; }
+.sound-toggle svg { width: 1.15em; height: 1.15em; flex: none; }
+.sound-toggle[aria-pressed='false'] { opacity: 0.6; }
