@@ -1,0 +1,24 @@
+# Render 藍圖：在 Render 後台選 New → Blueprint，指定這個 GitHub 儲存庫即可部署
+services:
+  - type: web
+    runtime: static
+    name: hsu-pei-ching-gallery
+    branch: main
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    pullRequestPreviewsEnabled: false
+    # 前端路由：/studio、/about 等網址都交給 index.html 處理
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    headers:
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+    # 接上 Supabase 後，在 Render 後台填入這兩個值（sync: false 代表不寫在檔案裡）
+    envVars:
+      - key: VITE_SUPABASE_URL
+        sync: false
+      - key: VITE_SUPABASE_ANON_KEY
+        sync: false
