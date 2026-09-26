@@ -79,6 +79,18 @@ export const WORKS = [
     dimensions: '',
     created_at: '2026-09-26T00:00:00Z',
   },
+  {
+    id: 6,
+    title: '水族館特展室許培璟畫作展覽',
+    description: '澎湖有線電視地方新聞（2025 年 4 月 23 日）報導護理師畫家許培璟於水族館特展室展出的畫作展覽。',
+    category_id: 5,
+    image_path: null,
+    video_url: 'https://www.youtube.com/watch?v=hEXc8kK-Y-g',
+    year: 2025,
+    medium: '',
+    dimensions: '',
+    created_at: '2025-04-23T00:00:00Z',
+  },
 ]
 
 // 畫室日常（示範照片）
