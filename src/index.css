@@ -2,6 +2,14 @@
    巴洛克風格：明暗對照（chiaroscuro）、深紅絲絨牆、雕花金框、聚光燈
    ============================================================ */
 
+/* 華康秀風體 W3 是商業字型，不隨網站提供，只使用訪客電腦上已安裝的版本；
+   沒有安裝的訪客會改用霞鶩文楷（開源，由 Google Fonts 載入） */
+@font-face {
+  font-family: 'HuaKang Hsiu';
+  src: local('華康秀風體W3'), local('DFHsiuW3-B5'), local('DFHsiu-W3-WIN-BF');
+  font-display: swap;
+}
+
 :root {
   --bg: #140c0a;
   --surface: #1f1411;
@@ -22,8 +30,8 @@
   --gold-metal: linear-gradient(135deg, #5a3c0c 0%, #d8b25a 14%, #fbe9a8 24%, #a87c28 40%, #6e4c12 52%, #e0bf6a 66%, #fff0b8 74%, #a07426 88%, #5a3c0c 100%);
 
   --script: 'Pinyon Script', 'Playfair Display', cursive;
-  --display: 'Playfair Display', 'Noto Serif TC', serif;
-  --serif: 'Noto Serif TC', 'Playfair Display', 'PMingLiU', serif;
+  --display: 'Playfair Display', 'HuaKang Hsiu', 'LXGW WenKai TC', serif;
+  --serif: 'HuaKang Hsiu', 'LXGW WenKai TC', 'DFKai-SB', 'BiauKai', serif;
 
   font-family: var(--serif);
   color: var(--ink);
