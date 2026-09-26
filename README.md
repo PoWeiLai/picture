@@ -35,7 +35,11 @@
 
 ## 部署
 
-`npm run build` 會產生 `dist/`，可以部署到 Vercel、Netlify 或 Cloudflare Pages（免費）。
-記得在部署平台設定 `VITE_SUPABASE_URL` 和 `VITE_SUPABASE_ANON_KEY` 環境變數，
-並把 Supabase 的 Site URL 改成正式網址。因為用了前端路由，需要設定所有路徑都回傳 `index.html`
-（Vercel / Cloudflare Pages 預設即可；Netlify 需加 `_redirects` 檔：`/* /index.html 200`）。
+網站部署在 [Render](https://render.com)（免費的靜態網站方案），設定都寫在 `render.yaml`。
+
+1. 把專案推上 GitHub。
+2. 在 Render 後台選 **New → Blueprint**，連接 GitHub 並選這個儲存庫，按 **Apply**。
+3. 接上 Supabase 後，到 Render 服務的 **Environment** 填入 `VITE_SUPABASE_URL` 和 `VITE_SUPABASE_ANON_KEY`，
+   重新部署一次；並把 Supabase 的 Site URL 改成 Render 給的正式網址。
+
+之後每次推送到 `main` 分支，Render 都會自動重新部署。
