@@ -806,3 +806,125 @@ textarea { resize: vertical; }
   .lightbox-arrow.prev { left: calc(50% - 64px); }
   .lightbox-arrow.next { right: calc(50% - 64px); }
 }
+
+/* ============================================================
+   後台管理
+   ============================================================ */
+.admin-shell { display: grid; grid-template-columns: 240px minmax(0, 1fr); min-height: 100vh; }
+.admin-sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.75rem 1.25rem;
+  background: linear-gradient(180deg, #1e0f0c, #120a08);
+  border-right: 1px solid var(--gold-lo);
+  box-shadow: 4px 0 20px rgb(0 0 0 / 0.5);
+}
+.admin-brand { display: flex; flex-direction: column; align-items: center; text-align: center; text-decoration: none; gap: 0.1rem; }
+.admin-brand .eyebrow { font-size: 1.5rem; }
+.admin-brand strong { color: var(--gold-hi); letter-spacing: 0.3em; font-size: 1.2rem; }
+.admin-brand .muted { font-size: 0.8rem; letter-spacing: 0.1em; }
+.admin-menu { display: flex; flex-direction: column; gap: 0.2rem; }
+.admin-menu a {
+  padding: 0.55rem 0.9rem;
+  border-radius: 3px;
+  color: var(--ink-soft);
+  text-decoration: none;
+  letter-spacing: 0.15em;
+  border-left: 2px solid transparent;
+}
+.admin-menu a:hover { background: rgb(212 171 79 / 0.08); color: var(--gold-hi); }
+.admin-menu a.active { background: rgb(142 27 34 / 0.35); color: var(--gold-hi); border-left-color: var(--gold); }
+.admin-sidebar-foot { margin-top: auto; display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.9rem; }
+.admin-sidebar-foot a { text-decoration: none; }
+
+.admin-main { padding: 2rem clamp(16px, 3vw, 2.5rem) 4rem; min-width: 0; }
+.admin-demo {
+  margin: 0 0 1.5rem;
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--gold-mid);
+  background: rgb(212 171 79 / 0.1);
+  color: var(--gold-hi);
+  font-size: 0.9rem;
+}
+.admin-page-head { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--gold-lo); }
+.admin-page-head h1 { margin: 0; font-size: 1.7rem; color: var(--gold-hi); }
+.admin-page-head p { margin: 0.2rem 0 0; }
+.admin-page-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+.admin-page-actions button, .admin-page-actions .button { padding: 0.5rem 1.2rem; font-size: 0.92rem; }
+.admin-page .panel { margin-bottom: 1.75rem; }
+
+/* 統計卡片 */
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+.stat-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.25rem 1rem;
+  text-decoration: none;
+  background: linear-gradient(180deg, var(--surface-2), var(--surface));
+  border: 1px solid var(--gold-lo);
+  box-shadow: 0 8px 20px rgb(0 0 0 / 0.4);
+  transition: border-color 0.2s, transform 0.2s;
+}
+.stat-tile:hover { border-color: var(--gold); transform: translateY(-2px); }
+.stat-value { font-family: var(--display); font-size: 2.4rem; font-weight: 700; line-height: 1.2; color: var(--gold-hi); }
+.stat-label { color: var(--ink-soft); letter-spacing: 0.2em; font-size: 0.9rem; }
+.quick-actions { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.6rem; }
+.quick-actions li::before { content: '❧ '; color: var(--gold); }
+
+/* 工具列與表格 */
+.admin-toolbar { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.admin-toolbar input[type='search'] { flex: 1 1 240px; }
+.admin-toolbar select { width: auto; }
+.admin-table-wrap { overflow-x: auto; padding: 1rem 1.25rem; }
+.admin-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+.admin-table th {
+  text-align: left;
+  font-weight: 600;
+  color: var(--gold);
+  letter-spacing: 0.15em;
+  font-size: 0.85rem;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--gold-lo);
+  white-space: nowrap;
+}
+.admin-table td { padding: 0.6rem 0.75rem; border-bottom: 1px solid rgb(90 66 34 / 0.45); vertical-align: middle; }
+.admin-table tr:hover td { background: rgb(212 171 79 / 0.04); }
+.admin-table .list-work .thumb { border-width: 1px; }
+.admin-table .list-work .thumb img, .admin-table .list-work .video-thumb { width: 52px; height: 52px; }
+.admin-table .list-work .thumb { width: 54px; }
+.row-actions { white-space: nowrap; text-align: right; }
+.row-actions > * + * { margin-left: 0.75rem; }
+.row-actions a { text-decoration: none; }
+.cell-text { max-width: 28em; white-space: pre-wrap; overflow-wrap: anywhere; }
+.nowrap { white-space: nowrap; }
+.admin-table-wrap .inline-form { margin-top: 1rem; max-width: 480px; }
+
+/* 編輯表單 */
+.edit-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 1.5rem; align-items: start; }
+.edit-grid .panel { margin: 6px; }
+.form-field { display: flex; flex-direction: column; gap: 0.35rem; margin-top: 1rem; font-size: 0.95rem; color: var(--ink-soft); }
+.field-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.75rem; }
+.form-actions { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+.form-actions button[type='submit'] { align-self: auto; }
+.inline-thumb { width: 48px; height: 48px; object-fit: cover; vertical-align: middle; border: 1px solid var(--gold-mid); }
+.image-field { display: flex; gap: 1rem; align-items: center; }
+.image-field img { width: 110px; height: 110px; object-fit: cover; border: 2px solid var(--gold-mid); flex: none; }
+.image-field label { flex: 1; }
+.admin-page .form button[type='submit'] { align-self: flex-end; }
+
+@media (max-width: 900px) {
+  .admin-shell { grid-template-columns: 1fr; }
+  .admin-sidebar { position: static; height: auto; padding: 1rem 16px; gap: 0.75rem; }
+  .admin-brand { flex-direction: row; justify-content: center; gap: 0.6rem; }
+  .admin-brand .muted { display: none; }
+  .admin-menu { flex-direction: row; overflow-x: auto; gap: 0.25rem; }
+  .admin-menu a { white-space: nowrap; border-left: none; border-bottom: 2px solid transparent; padding: 0.4rem 0.7rem; }
+  .admin-menu a.active { border-bottom-color: var(--gold); }
+  .admin-sidebar-foot { flex-direction: row; justify-content: space-between; }
+  .edit-grid { grid-template-columns: 1fr; }
+}

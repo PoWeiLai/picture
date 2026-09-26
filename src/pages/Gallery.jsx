@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { swing, prefersReducedMotion } from '../lib/motion'
-import { supabase } from '../lib/supabase'
+import { supabase, imageUrl } from '../lib/supabase'
 import { toRoman } from '../lib/video'
 import { WorkThumb } from '../components/WorkMedia'
 import Ornament from '../components/Ornament'
-import { HERO } from '../siteConfig'
+import { useSiteContent } from '../lib/siteContent'
 import ScrollPaper from '../components/ScrollPaper'
 
 const KINDS = [
@@ -15,12 +15,13 @@ const KINDS = [
 ]
 
 function Hero() {
+  const { hero: HERO } = useSiteContent()
   return (
     <section className="hero">
       <figure className="hero-art">
         <div className="frame large hang" onClick={(e) => swing(e.currentTarget)}>
           <div className="frame-mat">
-            <img src={HERO.image} alt={HERO.artwork.title} />
+            <img src={imageUrl(HERO.image)} alt={HERO.artwork.title} />
           </div>
         </div>
         <figcaption className="placard">
@@ -39,7 +40,7 @@ function Hero() {
         </ScrollPaper>
         <div className="hero-actions">
           <a href="#collection" className="button">瀏覽典藏</a>
-          <a href={HERO.link} target="_blank" rel="noreferrer">展覽介紹 ↗</a>
+          {HERO.link && <a href={HERO.link} target="_blank" rel="noreferrer">展覽介紹 ↗</a>}
         </div>
       </div>
     </section>

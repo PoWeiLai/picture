@@ -8,8 +8,20 @@ const TABLES = {
     WORKS.map((w) => ({ ...w, categories: CATEGORIES.find((c) => c.id === w.category_id) ?? null })),
   studio_photos: () => STUDIO_PHOTOS,
   comments: () => [],
-  profiles: () => [],
+  profiles: () => DEMO_MEMBERS,
+  site_settings: () => [],
 }
+
+const DEMO_MEMBERS = [
+  {
+    id: 'demo-artist',
+    email: '（預覽模式）',
+    display_name: '許培璟',
+    is_admin: true,
+    created_at: '2026-09-26T00:00:00Z',
+    comment_count: 0,
+  },
+]
 
 const READ_ONLY = { data: null, error: { message: '預覽模式無法寫入，請先設定 Supabase。' } }
 
@@ -31,6 +43,7 @@ class Query {
   single() { this.mode = 'single'; return this }
   maybeSingle() { this.mode = 'maybe'; return this }
   insert() { return Promise.resolve(READ_ONLY) }
+  upsert() { return Promise.resolve(READ_ONLY) }
   update() { return new WriteQuery() }
   delete() { return new WriteQuery() }
   then(resolve, reject) {
@@ -47,6 +60,8 @@ class WriteQuery {
 }
 
 export const demoClient = {
+  rpc: (name) =>
+    Promise.resolve(name === 'admin_list_members' ? { data: DEMO_MEMBERS, error: null } : READ_ONLY),
   from: (table) => new Query(table),
   auth: {
     getSession: () => Promise.resolve({ data: { session: null } }),
