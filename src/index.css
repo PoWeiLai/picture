@@ -43,6 +43,7 @@
 
 body {
   margin: 0;
+  font-size: 1.5rem;
   min-height: 100vh;
   background-color: var(--bg);
   background-image:
@@ -58,8 +59,8 @@ body {
 a { color: var(--gold); text-decoration-color: rgb(212 171 79 / 0.5); text-underline-offset: 4px; }
 a:hover { color: var(--gold-hi); }
 h1, h2, h3 { font-weight: 700; letter-spacing: 0.1em; line-height: 1.35; }
-h1 { font-size: clamp(1.8rem, 4.5vw, 2.6rem); margin: 0.25rem 0 1rem; }
-h2 { font-size: 1.3rem; margin: 0 0 1rem; color: var(--gold); }
+h1 { font-size: clamp(2.4rem, 6vw, 3.4rem); margin: 0.25rem 0 1rem; }
+h2 { font-size: 1.95rem; margin: 0 0 1rem; color: var(--gold); }
 code { background: var(--surface-2); padding: 0 4px; border-radius: 3px; }
 
 .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 2.5rem 16px 4rem; flex: 1; }
@@ -93,7 +94,7 @@ code { background: var(--surface-2); padding: 0 4px; border-radius: 3px; }
   margin: 0;
   padding: 0.4rem 16px;
   text-align: center;
-  font-size: 0.85rem;
+  font-size: 1.275rem;
   letter-spacing: 0.08em;
   background: var(--gold-gradient);
   color: var(--gold-deep);
@@ -118,7 +119,7 @@ code { background: var(--surface-2); padding: 0 4px; border-radius: 3px; }
 }
 .nav { display: flex; justify-content: center; align-items: center; gap: 0.25rem 2rem; flex-wrap: wrap; margin-top: 0.25rem; }
 .nav a, .nav .link-button {
-  font-size: 0.95rem;
+  font-size: 1.425rem;
   letter-spacing: 0.25em;
   color: var(--ink-soft);
   text-decoration: none;
@@ -132,7 +133,7 @@ code { background: var(--surface-2); padding: 0 4px; border-radius: 3px; }
   text-align: center;
   color: var(--ink-soft);
   padding: 2rem 16px 2.75rem;
-  font-size: 0.9rem;
+  font-size: 1.35rem;
   letter-spacing: 0.15em;
   border-top: 1px solid var(--gold-lo);
   background: rgb(0 0 0 / 0.35);
@@ -209,7 +210,7 @@ textarea { resize: vertical; }
 .narrow > h1 + .muted { text-align: center; }
 
 .form { display: flex; flex-direction: column; gap: 1rem; }
-.form label { display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.95rem; color: var(--ink-soft); letter-spacing: 0.05em; }
+.form label { display: flex; flex-direction: column; gap: 0.35rem; font-size: 1.425rem; color: var(--ink-soft); letter-spacing: 0.05em; }
 .form button[type='submit'] { align-self: center; }
 .form h2 { text-align: center; letter-spacing: 0.3em; }
 .inline-form { display: flex; gap: 0.5rem; }
@@ -240,7 +241,7 @@ textarea { resize: vertical; }
   box-shadow: none;
   border-radius: 999px;
   padding: 0.25rem 1.15rem;
-  font-size: 0.92rem;
+  font-size: 1.38rem;
   font-weight: 400;
   letter-spacing: 0.12em;
   text-shadow: none;
@@ -334,7 +335,7 @@ textarea { resize: vertical; }
 .thumb { position: relative; }
 .thumb img, .thumb video { display: block; width: 100%; height: auto; }
 .video-thumb { aspect-ratio: 16 / 9; object-fit: cover; background: #0d0806; }
-.video-thumb.placeholder { display: grid; place-items: center; color: var(--gold); letter-spacing: 0.5em; font-size: 1.1rem; }
+.video-thumb.placeholder { display: grid; place-items: center; color: var(--gold); letter-spacing: 0.5em; font-size: 1.65rem; }
 .play-badge {
   position: absolute;
   inset: 50% auto auto 50%;
@@ -369,9 +370,9 @@ textarea { resize: vertical; }
     0 6px 14px rgb(0 0 0 / 0.6);
   text-shadow: 0 1px 0 rgb(255 240 190 / 0.55);
 }
-.placard-no { font-family: var(--display); font-style: italic; font-size: 0.82rem; letter-spacing: 0.15em; color: #4a3009; }
-.placard-title { font-weight: 700; letter-spacing: 0.14em; margin: 0; font-size: 1.05rem; color: #2a1606; }
-.placard-style { font-size: 0.8rem; letter-spacing: 0.1em; color: #3a2406; font-weight: 600; }
+.placard-no { font-family: var(--display); font-style: italic; font-size: 1.23rem; letter-spacing: 0.15em; color: #4a3009; }
+.placard-title { font-weight: 700; letter-spacing: 0.14em; margin: 0; font-size: 1.575rem; color: #2a1606; }
+.placard-style { font-size: 1.2rem; letter-spacing: 0.1em; color: #3a2406; font-weight: 600; }
 .placard-style:empty { display: none; }
 /* 作品頁的大銘牌改用深色底，讓金字更醒目 */
 .placard.large {
@@ -384,7 +385,7 @@ textarea { resize: vertical; }
 .placard.large .placard-no, .placard.large .placard-style { color: var(--ink-soft); }
 .placard.large .placard-title { font-size: clamp(1.5rem, 3.8vw, 2.1rem); }
 
-.tag { font-size: 0.78rem; color: var(--gold-hi); border: 1px solid var(--gold-mid); padding: 0 0.6rem; border-radius: 999px; letter-spacing: 0.1em; }
+.tag { font-size: 1.17rem; color: var(--gold-hi); border: 1px solid var(--gold-mid); padding: 0 0.6rem; border-radius: 999px; letter-spacing: 0.1em; }
 
 /* ---------- 首頁封面 ---------- */
 .hero {
@@ -413,7 +414,7 @@ textarea { resize: vertical; }
   text-indent: 0.3em;
   margin: 0.25rem 0 0;
 }
-.hero-subtitle { font-size: 1.15rem; letter-spacing: 0.35em; color: var(--ink-soft); margin: 0.25rem 0 0; }
+.hero-subtitle { font-size: 1.725rem; letter-spacing: 0.35em; color: var(--ink-soft); margin: 0.25rem 0 0; }
 .hero-intro { text-align: justify; max-width: 30em; margin: 1.5rem auto; }
 .hero-intro::first-letter, .description::first-letter, .about-lead::first-letter {
   float: left;
@@ -453,7 +454,7 @@ textarea { resize: vertical; }
   box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--gold-mid), 0 3px 6px rgb(0 0 0 / 0.7);
 }
 .letter-body { flex: 1; min-width: 0; }
-.letter-head { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; font-size: 0.9rem; }
+.letter-head { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; font-size: 1.35rem; }
 .letter-head strong { color: var(--gold-hi); }
 .letter-head .link-button { margin-left: auto; }
 .letter p { margin: 0.35rem 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
@@ -486,7 +487,7 @@ textarea { resize: vertical; }
 .list-work { display: flex; align-items: center; gap: 0.9rem; text-decoration: none; color: var(--ink); min-width: 0; }
 .list-work .thumb { width: 64px; flex: none; border: 2px solid var(--gold-mid); }
 .list-work .thumb img, .list-work .thumb video, .list-work .video-thumb { width: 60px; height: 60px; aspect-ratio: auto; object-fit: cover; }
-.list-work .video-thumb.placeholder { font-size: 0.7rem; letter-spacing: 0.2em; }
+.list-work .video-thumb.placeholder { font-size: 1.05rem; letter-spacing: 0.2em; }
 .list-work .play-badge { width: 24px; height: 24px; border-width: 1px; box-shadow: none; }
 .list-work .play-badge svg { width: 12px; height: 12px; margin-left: 1px; }
 
@@ -514,13 +515,13 @@ textarea { resize: vertical; }
 .frame.oval .frame-mat { border-radius: 50%; padding: 5px; }
 .frame.oval img { border-radius: 50%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 25%; }
 .about-text p { text-align: justify; margin: 0 0 1.15rem; }
-.about-lead { font-size: 1.12rem; }
+.about-lead { font-size: 1.68rem; }
 .about-quote {
   margin: 2rem 0 0;
   padding: 1rem 1.75rem;
   border-left: 3px solid var(--gold);
   background: linear-gradient(90deg, rgb(142 27 34 / 0.35), transparent);
-  font-size: 1.12rem;
+  font-size: 1.68rem;
   font-style: italic;
   letter-spacing: 0.08em;
   color: var(--gold-hi);
@@ -531,7 +532,7 @@ textarea { resize: vertical; }
 .honours li { padding: 0.55rem 0 0.55rem 1.7rem; border-bottom: 1px solid rgb(90 66 34 / 0.6); position: relative; }
 .honours li:last-child { border-bottom: none; }
 .honours li::before { content: '❧'; position: absolute; left: 0; color: var(--gold); }
-.sources { font-size: 0.85rem; margin-top: 2rem; }
+.sources { font-size: 1.275rem; margin-top: 2rem; }
 
 /* ---------- 手機 ---------- */
 @media (max-width: 760px) {
@@ -646,7 +647,7 @@ textarea { resize: vertical; }
 .scroll-paper .description::first-letter { color: var(--crimson); text-shadow: none; }
 .scroll-note {
   text-align: center;
-  font-size: 0.88rem;
+  font-size: 1.32rem;
   color: var(--paper-soft);
   border-top: 1px solid var(--paper-edge);
   padding-top: 0.6rem;
@@ -696,14 +697,14 @@ textarea { resize: vertical; }
 .book-title {
   text-align: center;
   color: var(--crimson);
-  font-size: 1.3rem;
+  font-size: 1.95rem;
   letter-spacing: 0.4em;
   margin: 0 0 1.25rem;
   padding-bottom: 0.6rem;
   border-bottom: 1px solid var(--paper-edge);
 }
 .book-body p { text-align: justify; margin: 0 0 1rem; }
-.book-body h3 { color: var(--crimson); font-size: 1rem; letter-spacing: 0.3em; margin: 1.25rem 0 0.25rem; }
+.book-body h3 { color: var(--crimson); font-size: 1.5rem; letter-spacing: 0.3em; margin: 1.25rem 0 0.25rem; }
 .book-body h3:first-child { margin-top: 0; }
 .book .about-lead::first-letter { color: var(--crimson); text-shadow: none; }
 .book .about-quote { color: var(--crimson); background: linear-gradient(90deg, rgb(142 27 34 / 0.1), transparent); border-left-color: var(--gold-lo); margin-top: 1.25rem; }
@@ -717,7 +718,7 @@ textarea { resize: vertical; }
   text-align: center;
   font-family: var(--display);
   font-style: italic;
-  font-size: 0.85rem;
+  font-size: 1.275rem;
   color: var(--paper-soft);
 }
 .book-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; padding: 0 0.5rem; }
@@ -752,7 +753,7 @@ textarea { resize: vertical; }
   cursor: zoom-in;
 }
 .studio-item .placard { margin-top: 1rem; }
-.studio-item .placard-title { font-size: 0.92rem; }
+.studio-item .placard-title { font-size: 1.38rem; }
 .frame.small-ornate { padding: 12px; }
 .frame.small-ornate::before { inset: 5px; border-width: 1px; }
 .frame.small-ornate::after {
@@ -833,8 +834,8 @@ textarea { resize: vertical; }
 }
 .admin-brand { display: flex; flex-direction: column; align-items: center; text-align: center; text-decoration: none; gap: 0.1rem; }
 .admin-brand .eyebrow { font-size: 1.5rem; }
-.admin-brand strong { color: var(--gold-hi); letter-spacing: 0.3em; font-size: 1.2rem; }
-.admin-brand .muted { font-size: 0.8rem; letter-spacing: 0.1em; }
+.admin-brand strong { color: var(--gold-hi); letter-spacing: 0.3em; font-size: 1.8rem; }
+.admin-brand .muted { font-size: 1.2rem; letter-spacing: 0.1em; }
 .admin-menu { display: flex; flex-direction: column; gap: 0.2rem; }
 .admin-menu a {
   padding: 0.55rem 0.9rem;
@@ -846,7 +847,7 @@ textarea { resize: vertical; }
 }
 .admin-menu a:hover { background: rgb(212 171 79 / 0.08); color: var(--gold-hi); }
 .admin-menu a.active { background: rgb(142 27 34 / 0.35); color: var(--gold-hi); border-left-color: var(--gold); }
-.admin-sidebar-foot { margin-top: auto; display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.9rem; }
+.admin-sidebar-foot { margin-top: auto; display: flex; flex-direction: column; gap: 0.35rem; font-size: 1.35rem; }
 .admin-sidebar-foot a { text-decoration: none; }
 
 .admin-main { padding: 2rem clamp(16px, 3vw, 2.5rem) 4rem; min-width: 0; }
@@ -856,13 +857,13 @@ textarea { resize: vertical; }
   border: 1px solid var(--gold-mid);
   background: rgb(212 171 79 / 0.1);
   color: var(--gold-hi);
-  font-size: 0.9rem;
+  font-size: 1.35rem;
 }
 .admin-page-head { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--gold-lo); }
 .admin-page-head h1 { margin: 0; font-size: 1.7rem; color: var(--gold-hi); }
 .admin-page-head p { margin: 0.2rem 0 0; }
 .admin-page-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
-.admin-page-actions button, .admin-page-actions .button { padding: 0.5rem 1.2rem; font-size: 0.92rem; }
+.admin-page-actions button, .admin-page-actions .button { padding: 0.5rem 1.2rem; font-size: 1.38rem; }
 .admin-page .panel { margin-bottom: 1.75rem; }
 
 /* 統計卡片 */
@@ -880,7 +881,7 @@ textarea { resize: vertical; }
 }
 .stat-tile:hover { border-color: var(--gold); transform: translateY(-2px); }
 .stat-value { font-family: var(--display); font-size: 2.4rem; font-weight: 700; line-height: 1.2; color: var(--gold-hi); }
-.stat-label { color: var(--ink-soft); letter-spacing: 0.2em; font-size: 0.9rem; }
+.stat-label { color: var(--ink-soft); letter-spacing: 0.2em; font-size: 1.35rem; }
 .quick-actions { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.6rem; }
 .quick-actions li::before { content: '❧ '; color: var(--gold); }
 
@@ -889,13 +890,13 @@ textarea { resize: vertical; }
 .admin-toolbar input[type='search'] { flex: 1 1 240px; }
 .admin-toolbar select { width: auto; }
 .admin-table-wrap { overflow-x: auto; padding: 1rem 1.25rem; }
-.admin-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+.admin-table { width: 100%; border-collapse: collapse; font-size: 1.425rem; }
 .admin-table th {
   text-align: left;
   font-weight: 600;
   color: var(--gold);
   letter-spacing: 0.15em;
-  font-size: 0.85rem;
+  font-size: 1.275rem;
   padding: 0.5rem 0.75rem;
   border-bottom: 1px solid var(--gold-lo);
   white-space: nowrap;
@@ -915,7 +916,7 @@ textarea { resize: vertical; }
 /* 編輯表單 */
 .edit-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 1.5rem; align-items: start; }
 .edit-grid .panel { margin: 6px; }
-.form-field { display: flex; flex-direction: column; gap: 0.35rem; margin-top: 1rem; font-size: 0.95rem; color: var(--ink-soft); }
+.form-field { display: flex; flex-direction: column; gap: 0.35rem; margin-top: 1rem; font-size: 1.425rem; color: var(--ink-soft); }
 .field-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.75rem; }
 .form-actions { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
 .form-actions button[type='submit'] { align-self: auto; }
