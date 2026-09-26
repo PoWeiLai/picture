@@ -1,9 +1,8 @@
-import { useEffect, useRef, useState } from 'react'
-import { useLocation } from 'react-router-dom'
-import { SOUNDS, clink, pageFlip, isSoundEnabled, setSoundEnabled, onSoundChange } from '../lib/sounds'
+import { useEffect, useState } from 'react'
+import { SOUNDS, clink, isSoundEnabled, setSoundEnabled, onSoundChange } from '../lib/sounds'
 
 // 決定點擊某個元素要發出哪種聲音：
-// data-sound 指定（none 代表不發聲）> 分頁/分類切換是風聲 > 換頁交給翻頁聲 > 其他按鈕是杯盤聲
+// data-sound 指定（none 代表不發聲）> 分頁/分類切換是風聲 > 換頁不發聲 > 其他按鈕是杯盤聲
 function soundFor(el) {
   if (el.dataset.sound) return el.dataset.sound
   if (el.matches('.tab, .chip')) return 'wind'
@@ -20,9 +19,6 @@ function soundFor(el) {
 }
 
 export function useSoundEffects() {
-  const { pathname } = useLocation()
-  const first = useRef(true)
-
   useEffect(() => {
     function onClick(e) {
       const el = e.target.closest('[data-sound], button, a, label.dropzone')
@@ -32,14 +28,6 @@ export function useSoundEffects() {
     document.addEventListener('click', onClick, true)
     return () => document.removeEventListener('click', onClick, true)
   }, [])
-
-  useEffect(() => {
-    if (first.current) {
-      first.current = false
-      return
-    }
-    pageFlip()
-  }, [pathname])
 }
 
 export function SoundToggle() {

@@ -22,6 +22,7 @@ import Ornament from './components/Ornament'
 import { toRoman } from './lib/video'
 import { SITE_NAME } from './siteConfig'
 import { useSoundEffects, SoundToggle } from './components/SoundEffects'
+import { useBackgroundMusic, MusicToggle, MusicCredit } from './components/BackgroundMusic'
 
 function Header() {
   const { user, profile, isAdmin } = useAuth()
@@ -57,6 +58,7 @@ function Header() {
               <NavLink to="/register">註冊</NavLink>
             </>
           )}
+          <MusicToggle />
           <SoundToggle />
         </nav>
       </div>
@@ -86,6 +88,7 @@ function FrontLayout() {
       <footer className="site-footer">
         <Ornament />
         <p>{SITE_NAME} · Anno Domini {toRoman(new Date().getFullYear())}</p>
+        <MusicCredit />
       </footer>
     </>
   )
@@ -93,6 +96,7 @@ function FrontLayout() {
 
 export default function App() {
   useSoundEffects()
+  useBackgroundMusic()
 
   return (
     <Routes>

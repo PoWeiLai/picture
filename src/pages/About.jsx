@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
 import Ornament from '../components/Ornament'
 import Book from '../components/Book'
-import { swing } from '../lib/motion'
 import { imageUrl } from '../lib/supabase'
 import { useSiteContent } from '../lib/siteContent'
 
@@ -59,7 +58,7 @@ export default function About() {
 
       <section className="about">
         <figure className="about-portrait">
-          <div className="frame oval hang" onClick={(e) => swing(e.currentTarget)}>
+          <div className="frame oval hang">
             <div className="frame-mat">
               <img src={imageUrl(artist.portrait)} alt={artist.name} />
             </div>

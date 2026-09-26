@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
 import { supabase, imageUrl, formatDate } from '../lib/supabase'
-import { swing } from '../lib/motion'
 import Ornament from '../components/Ornament'
 import Lightbox from '../components/Lightbox'
 
@@ -16,11 +15,6 @@ export default function Studio() {
       .order('created_at', { ascending: false })
       .then(({ data }) => setPhotos(data ?? []))
   }, [])
-
-  function show(e, i) {
-    swing(e.currentTarget.querySelector('.frame'))
-    setTimeout(() => setOpen(i), 300)
-  }
 
   return (
     <main className="container">
@@ -44,7 +38,7 @@ export default function Studio() {
               className="salon-item studio-item"
               style={{ '--i': i }}
               data-sound="clink"
-              onClick={(e) => show(e, i)}
+              onClick={() => setOpen(i)}
             >
               <div className="frame small-ornate">
                 <div className="frame-mat">

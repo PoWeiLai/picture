@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { swing, prefersReducedMotion } from '../lib/motion'
+import { Link, useSearchParams } from 'react-router-dom'
 import { supabase, imageUrl } from '../lib/supabase'
 import { toRoman } from '../lib/video'
 import { WorkThumb } from '../components/WorkMedia'
 import Ornament from '../components/Ornament'
 import { useSiteContent } from '../lib/siteContent'
 import ScrollPaper from '../components/ScrollPaper'
+import PenText from '../components/PenText'
 
 const KINDS = [
   { value: '', label: '全部' },
@@ -16,10 +16,13 @@ const KINDS = [
 
 function Hero() {
   const { hero: HERO } = useSiteContent()
+  // 封面文字依序用鋼筆寫出：標題 → 副標 → 介紹 → 展期
+  const [step, setStep] = useState(0)
+  const next = (n) => () => setStep((s) => Math.max(s, n))
   return (
     <section className="hero">
       <figure className="hero-art">
-        <div className="frame large hang" onClick={(e) => swing(e.currentTarget)}>
+        <div className="frame large hang">
           <div className="frame-mat">
             <img src={imageUrl(HERO.image)} alt={HERO.artwork.title} />
           </div>
@@ -31,12 +34,12 @@ function Hero() {
       </figure>
       <div className="hero-text">
         <p className="eyebrow">{HERO.eyebrow}</p>
-        <h1 className="hero-title">{HERO.title}</h1>
-        <p className="hero-subtitle">{HERO.subtitle}</p>
+        <PenText as="h1" className="hero-title" text={HERO.title} speed={320} onDone={next(1)} />
+        <PenText className="hero-subtitle" text={HERO.subtitle} speed={110} start={step >= 1} onDone={next(2)} />
         <Ornament />
         <ScrollPaper className="hero-scroll">
-          <p className="hero-intro">{HERO.intro}</p>
-          <p className="scroll-note">{HERO.exhibition}</p>
+          <PenText className="hero-intro" text={HERO.intro} speed={60} start={step >= 2} onDone={next(3)} />
+          <PenText className="scroll-note" text={HERO.exhibition} speed={50} start={step >= 3} />
         </ScrollPaper>
         <div className="hero-actions">
           <a href="#collection" className="button">瀏覽典藏</a>
@@ -52,7 +55,6 @@ export default function Gallery() {
   const [works, setWorks] = useState(null)
   const [error, setError] = useState('')
   const [params, setParams] = useSearchParams()
-  const navigate = useNavigate()
   const activeCategory = params.get('category') ?? ''
   const kind = params.get('kind') ?? ''
 
@@ -73,14 +75,6 @@ export default function Gallery() {
       setWorks(data ?? [])
     })
   }, [activeCategory, kind])
-
-  // 點擊畫作：先讓畫框擺盪一下，再進入作品頁
-  function openWork(e, id) {
-    if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || prefersReducedMotion()) return
-    e.preventDefault()
-    swing(e.currentTarget.querySelector('.frame'))
-    setTimeout(() => navigate(`/paintings/${id}`), 450)
-  }
 
   function update(key, value) {
     const next = new URLSearchParams(params)
@@ -137,7 +131,6 @@ export default function Gallery() {
               to={`/paintings/${w.id}`}
               className="salon-item"
               style={{ '--i': i }}
-              onClick={(e) => openWork(e, w.id)}
             >
               <div className="frame">
                 <div className="frame-mat">
