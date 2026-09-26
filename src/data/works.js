@@ -80,3 +80,15 @@ export const WORKS = [
     created_at: '2026-09-26T00:00:00Z',
   },
 ]
+
+// 畫室日常（示範照片）
+export const STUDIO_PHOTOS = [
+  { id: 1, image_path: '/about/artist.jpg', caption: '畫家許培璟', taken_on: null, created_at: '2026-09-26T00:00:00Z' },
+  {
+    id: 2,
+    image_path: '/works/video-cover.jpg',
+    caption: '「醉憶金門」油畫創作個展展場',
+    taken_on: '2023-06-02',
+    created_at: '2023-06-02T00:00:00Z',
+  },
+]

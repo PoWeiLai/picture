@@ -723,3 +723,86 @@ textarea { resize: vertical; }
   .book-page { padding: 1.5rem 1.4rem 2.75rem; }
   .scroll-content { padding: 0 1.1rem; }
 }
+
+/* ---------- 畫室日常 ---------- */
+.studio-wall { columns: 4 230px; column-gap: 2rem; }
+.studio-item,
+.studio-item:hover {
+  width: 100%;
+  margin-bottom: 2.5rem;
+  background: none;
+  border: none;
+  box-shadow: none;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 400;
+  letter-spacing: normal;
+  text-align: center;
+  text-shadow: none;
+  filter: none;
+  padding: 1.5rem 0 0;
+  cursor: zoom-in;
+}
+.studio-item .placard { margin-top: 1rem; }
+.studio-item .placard-title { font-size: 0.92rem; }
+.frame.small-ornate { padding: 12px; }
+.frame.small-ornate::before { inset: 5px; border-width: 1px; }
+.frame.small-ornate::after {
+  --r: radial-gradient(circle, #fff4c8 0 1.5px, #b0842c 2px 3px, #fbe9a8 3.5px 4px, transparent 5px);
+  background:
+    var(--r) 0 0 / 12px 12px no-repeat,
+    var(--r) 100% 0 / 12px 12px no-repeat,
+    var(--r) 0 100% / 12px 12px no-repeat,
+    var(--r) 100% 100% / 12px 12px no-repeat;
+}
+.frame.small-ornate .frame-mat { padding: 3px; }
+
+/* 放大檢視 */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 3rem 4.5rem;
+  background: radial-gradient(ellipse at 50% 30%, rgb(58 13 18 / 0.92), rgb(8 4 3 / 0.97));
+  animation: fade-in 0.3s ease both;
+}
+@keyframes fade-in { from { opacity: 0; } }
+.lightbox-figure { margin: 0; max-width: min(900px, 100%); display: flex; flex-direction: column; align-items: center; }
+.lightbox-figure .frame { cursor: default; }
+.lightbox-figure img { max-height: 72vh; width: auto; max-width: 100%; margin: 0 auto; }
+.lightbox-arrow, .lightbox-close,
+.lightbox-arrow:hover, .lightbox-close:hover {
+  position: fixed;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  font-size: 2rem;
+  line-height: 1;
+  letter-spacing: 0;
+  background: rgb(20 12 10 / 0.7);
+  color: var(--gold-hi);
+  border: 1px solid var(--gold-mid);
+  box-shadow: none;
+  text-shadow: none;
+}
+.lightbox-arrow:hover, .lightbox-close:hover { background: rgb(90 20 25 / 0.8); }
+.lightbox-arrow { top: 50%; translate: 0 -50%; }
+.lightbox-arrow.prev { left: 1rem; }
+.lightbox-arrow.next { right: 1rem; }
+.lightbox-close { top: 1rem; right: 1rem; font-size: 1.6rem; }
+
+.section-tabs { margin-bottom: 2rem; }
+.import-fields { display: flex; flex-direction: column; gap: 0.35rem; }
+.import-fields input[type='date'] { width: auto; }
+
+@media (max-width: 760px) {
+  .lightbox { padding: 4rem 1rem 5rem; }
+  .lightbox-arrow { top: auto; bottom: 1rem; translate: none; }
+  .lightbox-arrow.prev { left: calc(50% - 64px); }
+  .lightbox-arrow.next { right: calc(50% - 64px); }
+}

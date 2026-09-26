@@ -8,6 +8,7 @@ import Register from './pages/Register'
 import Account from './pages/Account'
 import Admin from './pages/Admin'
 import About from './pages/About'
+import Studio from './pages/Studio'
 import { isDemo } from './lib/supabase'
 import Ornament from './components/Ornament'
 import { toRoman } from './lib/video'
@@ -34,6 +35,7 @@ function Header() {
         <nav className="nav">
           <NavLink to="/" end className={({ isActive }) => (isActive && !isVideo ? 'active' : '')}>畫廊</NavLink>
           <Link to="/?kind=video#collection" className={isVideo ? 'active' : ''}>影片</Link>
+          <NavLink to="/studio">畫室</NavLink>
           <NavLink to="/about">畫家</NavLink>
           {isAdmin && <NavLink to="/admin">管理</NavLink>}
           {user ? (
@@ -73,6 +75,7 @@ export default function App() {
       <Header />
       <Routes>
         <Route path="/about" element={<About />} />
+        <Route path="/studio" element={<Studio />} />
         <Route path="/" element={<Gallery />} />
         <Route path="/paintings/:id" element={<PaintingDetail />} />
         <Route path="/login" element={<Login />} />

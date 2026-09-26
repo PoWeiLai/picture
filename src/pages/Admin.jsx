@@ -5,19 +5,15 @@ import { parseVideo } from '../lib/video'
 import { WorkThumb, WorkPlayer } from '../components/WorkMedia'
 import Ornament from '../components/Ornament'
 import { pour } from '../lib/sounds'
+import Dropzone from '../components/Dropzone'
+import StudioAdmin from '../components/StudioAdmin'
+import { uploadImage, removeImage } from '../lib/storage'
 
-async function uploadImage(file) {
-  const ext = file.name.split('.').pop().toLowerCase()
-  const path = `${crypto.randomUUID()}.${ext}`
-  const { error } = await supabase.storage.from('paintings').upload(path, file, { contentType: file.type })
-  if (error) throw new Error('圖片上傳失敗：' + error.message)
-  return path
-}
 
 async function insertWork(row) {
   const { error } = await supabase.from('paintings').insert(row)
   if (error) {
-    if (row.image_path) await supabase.storage.from('paintings').remove([row.image_path])
+    await removeImage(row.image_path)
     throw new Error('儲存失敗：' + error.message)
   }
 }
@@ -39,7 +35,6 @@ function ImageImport({ categories, onUploaded }) {
   const [categoryId, setCategoryId] = useState('')
   const [busy, setBusy] = useState(false)
   const [progress, setProgress] = useState('')
-  const [dragging, setDragging] = useState(false)
 
   function addFiles(fileList) {
     const images = [...fileList].filter((f) => f.type.startsWith('image/'))
@@ -99,23 +94,7 @@ function ImageImport({ categories, onUploaded }) {
   return (
     <form onSubmit={submit} className="panel form">
       <h2>匯入畫作圖片</h2>
-      <label
-        className={dragging ? 'dropzone dragging' : 'dropzone'}
-        onDragOver={(e) => {
-          e.preventDefault()
-          setDragging(true)
-        }}
-        onDragLeave={() => setDragging(false)}
-        onDrop={(e) => {
-          e.preventDefault()
-          setDragging(false)
-          addFiles(e.dataTransfer.files)
-        }}
-      >
-        <input type="file" accept="image/*" multiple hidden onChange={(e) => { addFiles(e.target.files); e.target.value = '' }} />
-        <span className="dropzone-title">點此選擇圖片，或把圖片拖曳到這裡</span>
-        <span className="muted">可一次選取多張，檔名會自動當作標題</span>
-      </label>
+      <Dropzone onFiles={addFiles} hint="可一次選取多張，檔名會自動當作標題" />
 
       {items.length > 0 && (
         <>
@@ -279,7 +258,7 @@ function WorkList({ works, categories, onChanged }) {
   async function remove(w) {
     if (!confirm(`確定刪除「${w.title}」嗎？評論也會一起刪除，無法復原。`)) return
     const { error } = await supabase.from('paintings').delete().eq('id', w.id)
-    if (!error && w.image_path) await supabase.storage.from('paintings').remove([w.image_path])
+    if (!error) await removeImage(w.image_path)
     onChanged()
   }
 
@@ -308,6 +287,7 @@ export default function Admin() {
   const [categories, setCategories] = useState([])
   const [works, setWorks] = useState([])
   const [tab, setTab] = useState('images')
+  const [section, setSection] = useState('works')
 
   const loadCategories = useCallback(async () => {
     const { data } = await supabase.from('categories').select('*').order('sort_order')
@@ -331,6 +311,12 @@ export default function Admin() {
         <h1>畫室管理</h1>
         <Ornament />
       </header>
+      <div className="tabs section-tabs">
+        <button className={section === 'works' ? 'tab active' : 'tab'} onClick={() => setSection('works')}>作品</button>
+        <button className={section === 'studio' ? 'tab active' : 'tab'} onClick={() => setSection('studio')}>畫室照片</button>
+      </div>
+      {section === 'studio' ? <StudioAdmin /> : (
+      <>
       <div className="admin-columns">
         <div>
           <div className="tabs">
@@ -350,6 +336,8 @@ export default function Admin() {
         />
       </div>
       <WorkList works={works} categories={categories} onChanged={loadWorks} />
+      </>
+      )}
     </main>
   )
 }

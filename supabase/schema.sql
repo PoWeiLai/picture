@@ -104,6 +104,20 @@ create policy "comments 登入者新增" on public.comments for insert to authen
 create policy "comments 本人或管理員刪除" on public.comments for delete to authenticated
   using (user_id = auth.uid() or public.is_admin());
 
+-- ========== 畫室日常照片 ==========
+create table public.studio_photos (
+  id bigint generated always as identity primary key,
+  image_path text not null,
+  caption text not null default '' check (char_length(caption) <= 200),
+  taken_on date,
+  created_at timestamptz not null default now()
+);
+
+alter table public.studio_photos enable row level security;
+create policy "studio_photos 公開讀取" on public.studio_photos for select using (true);
+create policy "studio_photos 管理員寫入" on public.studio_photos for all
+  using (public.is_admin()) with check (public.is_admin());
+
 -- ========== 圖片儲存 ==========
 insert into storage.buckets (id, name, public) values ('paintings', 'paintings', true);
 

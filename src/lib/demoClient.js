@@ -1,11 +1,12 @@
 // 預覽模式：尚未設定 Supabase 時，用 src/data/works.js 的資料模擬唯讀的 Supabase client。
 // 只實作網站用到的查詢方法；所有寫入都會回傳錯誤。
-import { CATEGORIES, WORKS } from '../data/works'
+import { CATEGORIES, WORKS, STUDIO_PHOTOS } from '../data/works'
 
 const TABLES = {
   categories: () => CATEGORIES,
   paintings: () =>
     WORKS.map((w) => ({ ...w, categories: CATEGORIES.find((c) => c.id === w.category_id) ?? null })),
+  studio_photos: () => STUDIO_PHOTOS,
   comments: () => [],
   profiles: () => [],
 }

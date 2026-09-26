@@ -21,3 +21,8 @@ from (values
 insert into public.paintings (title, description, category_id, video_url, image_path, medium)
 values ('醉憶金門・展場紀錄', '於「醉憶金門」油畫創作個展展場，與作品一同留下的影像紀錄。', (select id from public.categories where name = '油畫'),
         'https://drive.google.com/file/d/1mC5hx7M7kJaN0lqoQFzigUY7NW_indcd/view', '/works/video-cover.jpg', '');
+
+-- 畫室日常（示範照片，可在管理頁刪除或替換）
+insert into public.studio_photos (image_path, caption, taken_on) values
+  ('/about/artist.jpg', '畫家許培璟', null),
+  ('/works/video-cover.jpg', '「醉憶金門」油畫創作個展展場', '2023-06-02');
