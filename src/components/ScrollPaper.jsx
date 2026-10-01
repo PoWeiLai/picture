@@ -2,10 +2,21 @@ import { useEffect, useRef, useState } from 'react'
 import { prefersReducedMotion } from '../lib/motion'
 import { unroll } from '../lib/sounds'
 
-// 捲軸：捲進畫面時自動往下展開；點擊木軸可以捲起或再次展開
-export default function ScrollPaper({ children, className = '' }) {
+// 捲軸：捲進畫面時自動往下展開；點擊木軸可以捲起或再次展開。第一次展開完成時呼叫 onOpen
+export default function ScrollPaper({ children, className = '', onOpen }) {
   const ref = useRef(null)
   const [open, setOpen] = useState(false)
+  const onOpenRef = useRef(onOpen)
+  useEffect(() => {
+    onOpenRef.current = onOpen
+  })
+
+  // 等捲軸展開動畫（約 1.4 秒）跑完再通知，裡面的字才不會在還沒攤開時就開始寫
+  useEffect(() => {
+    if (!open) return
+    const timer = setTimeout(() => onOpenRef.current?.(), prefersReducedMotion() ? 0 : 1400)
+    return () => clearTimeout(timer)
+  }, [open])
 
   useEffect(() => {
     const el = ref.current

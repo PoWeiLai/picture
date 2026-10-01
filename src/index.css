@@ -715,82 +715,51 @@ textarea { resize: vertical; }
 }
 .description-scroll { margin-top: 2.5rem; max-width: 38em; }
 
-/* ---------- 書本（畫家頁） ---------- */
-.book { perspective: 2000px; }
-.book-cover {
-  position: relative;
-  padding: 16px 16px 16px 30px;
-  background: linear-gradient(135deg, #6a121a 0%, #420a10 55%, #2a070a 100%);
-  border-radius: 4px 12px 12px 4px;
-  box-shadow:
-    inset 0 0 0 2px #7a1a20,
-    inset 0 0 0 6px rgb(0 0 0 / 0.35),
-    inset 0 0 0 7px var(--gold-lo),
-    0 28px 55px var(--shadow);
-}
-/* 書脊 */
-.book-cover::before {
-  content: '';
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 18px;
-  border-radius: 4px 0 0 4px;
-  background:
-    linear-gradient(180deg, transparent 12%, var(--gold-mid) 12% 13.5%, transparent 13.5% 86.5%, var(--gold-mid) 86.5% 88%, transparent 88%),
-    linear-gradient(90deg, #1e0508, #5a0f16 60%, #2a070a);
-}
-.book-pages { display: grid; position: relative; transform-style: preserve-3d; }
-.book-page {
-  grid-area: 1 / 1;
-  position: relative;
-  padding: 2rem 2.25rem 3rem;
-  background:
-    linear-gradient(90deg, rgb(60 30 10 / 0.35), transparent 22px),
-    var(--paper);
-  color: var(--paper-ink);
-  transform-origin: left center;
-  backface-visibility: hidden;
-  transition: transform 1s cubic-bezier(0.6, 0.05, 0.3, 1), box-shadow 1s;
-  box-shadow: 2px 0 0 #e3cfa2, 4px 0 0 #d5bf8f, 6px 1px 0 #c9b281;
-  cursor: pointer;
-}
-.book-page.turned { transform: rotateY(-178deg); pointer-events: none; box-shadow: -18px 0 30px rgb(0 0 0 / 0.35); }
-.book-title {
-  text-align: center;
-  color: var(--crimson);
-  font-size: 1.95rem;
-  letter-spacing: 0.4em;
-  margin: 0 0 1.25rem;
-  padding-bottom: 0.6rem;
-  border-bottom: 1px solid var(--paper-edge);
-}
-.book-body p { text-align: justify; margin: 0 0 1rem; }
-.book-body h3 { color: var(--crimson); font-size: 1.5rem; letter-spacing: 0.3em; margin: 1.25rem 0 0.25rem; }
-.book-body h3:first-child { margin-top: 0; }
-.book .about-lead::first-letter { color: var(--crimson); text-shadow: none; }
-.book .about-quote { color: var(--crimson); background: linear-gradient(90deg, rgb(142 27 34 / 0.1), transparent); border-left-color: var(--gold-lo); margin-top: 1.25rem; }
-.book .honours li { border-bottom-color: var(--paper-edge); }
-.book .honours li::before { color: #a07426; }
-.book-folio {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0.9rem;
-  text-align: center;
-  font-family: var(--display);
-  font-style: italic;
-  font-size: 1.275rem;
-  color: var(--paper-soft);
-}
-.book-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; padding: 0 0.5rem; }
-.book-nav .link-button:disabled { opacity: 0.35; }
+/* ---------- 個人自傳：捲軸展開後用毛筆寫字 ---------- */
 .about { align-items: start; }
+.about-scroll { max-width: none; margin-top: 0; }
+.about-brush { cursor: default; }
+.about-brush p { margin: 0 0 1rem; }
+.about-brush h3 { color: var(--crimson); font-size: 1.5rem; letter-spacing: 0.3em; margin: 1.5rem 0 0.25rem; }
+.about-scroll .about-lead::first-letter { color: var(--crimson); text-shadow: none; }
+.about-scroll .about-quote { color: var(--crimson); background: linear-gradient(90deg, rgb(142 27 34 / 0.1), transparent); border-left-color: var(--gold-lo); margin-top: 1.25rem; }
+.about-scroll .honours li { border-bottom-color: var(--paper-edge); }
+.about-scroll .honours li::before { color: #a07426; }
+
+/* 毛筆字：墨色較深，每個字像墨水在宣紙上暈開 */
+.pen-text.brush { color: #1c1009; }
+.pen-text.brush.about-quote { color: var(--crimson); }
+.pen-text.brush .pen-char.written { animation: brush-in 0.8s ease-out both; }
+@keyframes brush-in {
+  0%   { opacity: 0; filter: blur(4px); transform: scale(1.25); text-shadow: 0 0 6px rgb(28 16 9 / 0.6); }
+  45%  { opacity: 0.9; filter: blur(0.8px); transform: scale(1.04); text-shadow: 0 0 3px rgb(28 16 9 / 0.35); }
+  100% { opacity: 1; filter: none; transform: none; text-shadow: 0 0 0.6px rgb(28 16 9 / 0.5); }
+}
+.pen-text.brush .pen-char { display: inline-block; }
+/* 毛筆：竹管筆桿、黑色筆尖，斜放在剛寫好的字右上方 */
+.brush-nib {
+  position: absolute;
+  left: 85%;
+  bottom: 30%;
+  width: 0.7em;
+  height: 2.6em;
+  pointer-events: none;
+  transform: rotate(28deg);
+  transform-origin: 50% 100%;
+  background: no-repeat center / contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 64'%3E%3Cdefs%3E%3ClinearGradient id='b' x1='0' x2='1'%3E%3Cstop offset='0' stop-color='%23a8743a'/%3E%3Cstop offset='.5' stop-color='%23e6c48a'/%3E%3Cstop offset='1' stop-color='%238a5a26'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='5' y='0' width='6' height='38' rx='2' fill='url(%23b)' stroke='%235a3816' stroke-width='.6'/%3E%3Cpath d='M5 12h6M5 26h6' stroke='%235a3816' stroke-width='.6'/%3E%3Crect x='4' y='37' width='8' height='4' rx='1' fill='%232a1a0e'/%3E%3Cpath d='M4 41q-1 9 4 23q5-14 4-23z' fill='%23140b05'/%3E%3C/svg%3E");
+  filter: drop-shadow(1px 2px 2px rgb(0 0 0 / 0.4));
+  animation: brush-stroke 0.35s ease-in-out infinite alternate;
+}
+@keyframes brush-stroke {
+  from { transform: rotate(24deg) translate(0, 0); }
+  to   { transform: rotate(32deg) translate(-1px, -2px); }
+}
 
 @media (prefers-reduced-motion: reduce) {
-  .scroll-sheet, .book-page { transition: none; }
+  .scroll-sheet { transition: none; }
+  .pen-text.brush .pen-char.written, .brush-nib { animation: none; }
 }
 @media (max-width: 760px) {
-  .book-page { padding: 1.5rem 1.4rem 2.75rem; }
   .scroll-content { padding: 0 1.1rem; }
 }
 

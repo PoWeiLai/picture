@@ -1,52 +1,66 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Ornament from '../components/Ornament'
-import Book from '../components/Book'
+import ScrollPaper from '../components/ScrollPaper'
+import PenText from '../components/PenText'
 import { imageUrl } from '../lib/supabase'
 import { useSiteContent } from '../lib/siteContent'
 
-function bookPages(artist) {
-  const [first, ...rest] = artist.paragraphs ?? []
-  return [
-    {
-      title: '創作理念',
-      content: (
-        <>
-          <p className="about-lead">{artist.lead}</p>
-          {first && <p>{first}</p>}
-        </>
-      ),
-    },
-    {
-      title: '光影與記憶',
-      content: (
-        <>
-          {rest.map((p, i) => (
-            <p key={i}>{p}</p>
-          ))}
-          {artist.quote && <blockquote className="about-quote">{artist.quote}</blockquote>}
-        </>
-      ),
-    },
-    {
-      title: '獲獎與展覽',
-      content: (
-        <>
-          <h3>獲獎</h3>
-          <ul className="honours">
-            {(artist.awards ?? []).map((a, i) => <li key={i}>{a}</li>)}
-          </ul>
-          <h3>展覽經歷</h3>
-          <ul className="honours">
-            {(artist.exhibitions ?? []).map((e, i) => <li key={i}>{e}</li>)}
-          </ul>
-        </>
-      ),
-    },
-  ]
+// 捲軸裡要依序用毛筆寫出的段落：每段寫完才寫下一段
+function segments(artist) {
+  const list = []
+  if (artist.lead) list.push({ key: 'lead', className: 'about-lead', text: artist.lead })
+  ;(artist.paragraphs ?? []).forEach((p, i) => list.push({ key: `p${i}`, text: p }))
+  if (artist.quote) list.push({ key: 'quote', className: 'about-quote', text: artist.quote })
+  if (artist.awards?.length) {
+    list.push({ key: 'awards', as: 'h3', text: '獲獎' })
+    artist.awards.forEach((a, i) => list.push({ key: `a${i}`, as: 'li', group: 'awards', text: a }))
+  }
+  if (artist.exhibitions?.length) {
+    list.push({ key: 'exhibitions', as: 'h3', text: '展覽經歷' })
+    artist.exhibitions.forEach((e, i) => list.push({ key: `e${i}`, as: 'li', group: 'exhibitions', text: e }))
+  }
+  return list
+}
+
+// 把連續的清單項目包進 <ul>
+function groupLists(items) {
+  const out = []
+  for (const item of items) {
+    const last = out[out.length - 1]
+    if (item.group && last?.group === item.group) last.items.push(item)
+    else if (item.group) out.push({ key: `list-${item.key}`, group: item.group, items: [item] })
+    else out.push(item)
+  }
+  return out
 }
 
 export default function About() {
   const { artist } = useSiteContent()
+  const [opened, setOpened] = useState(false)
+  const [step, setStep] = useState(0)
+  const [finished, setFinished] = useState(false)
+
+  const items = segments(artist)
+  const index = Object.fromEntries(items.map((s, i) => [s.key, i]))
+  const done = finished || step >= items.length
+
+  function write(s) {
+    const i = index[s.key]
+    return (
+      <PenText
+        key={s.key}
+        as={s.as ?? 'p'}
+        className={s.className ?? ''}
+        text={s.text}
+        brush
+        speed={s.as === 'h3' ? 180 : 55}
+        start={opened && step >= i}
+        finish={finished}
+        onDone={() => setStep((n) => Math.max(n, i + 1))}
+      />
+    )
+  }
 
   return (
     <main className="container">
@@ -69,7 +83,25 @@ export default function About() {
           </figcaption>
         </figure>
 
-        <Book pages={bookPages(artist)} />
+        <div className="about-scroll-wrap">
+          <ScrollPaper className="about-scroll" onOpen={() => setOpened(true)}>
+            {/* 點一下捲軸內容就把剩下的字全部寫完 */}
+            <div
+              className="about-brush"
+              onClick={() => setFinished(true)}
+              title={done ? undefined : '點一下顯示全部文字'}
+            >
+              {groupLists(items).map((s) =>
+                s.items ? <ul key={s.key} className="honours">{s.items.map(write)}</ul> : write(s),
+              )}
+            </div>
+          </ScrollPaper>
+          {opened && !done && (
+            <p className="center">
+              <button type="button" className="link-button" onClick={() => setFinished(true)}>全部顯示 ›</button>
+            </p>
+          )}
+        </div>
       </section>
 
       <p className="center">
