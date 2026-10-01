@@ -8,6 +8,8 @@ const TABLES = {
     WORKS.map((w) => ({ ...w, categories: CATEGORIES.find((c) => c.id === w.category_id) ?? null })),
   studio_photos: () => STUDIO_PHOTOS,
   comments: () => [],
+  messages: () => [],
+  admin_requests: () => [],
   profiles: () => DEMO_MEMBERS,
   site_settings: () => [],
 }
@@ -20,6 +22,8 @@ const DEMO_MEMBERS = [
     is_admin: true,
     created_at: '2026-09-26T00:00:00Z',
     comment_count: 0,
+    requested_at: null,
+    request_note: null,
   },
 ]
 

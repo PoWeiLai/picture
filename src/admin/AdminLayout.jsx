@@ -1,14 +1,15 @@
 import { NavLink, Link, Outlet } from 'react-router-dom'
 import { useAuth } from '../AuthContext'
-import { isDemo } from '../lib/supabase'
 import { SITE_NAME } from '../siteConfig'
 
 const MENU = [
   { to: '/admin', label: '總覽', end: true },
   { to: '/admin/works', label: '作品' },
   { to: '/admin/categories', label: '分類' },
-  { to: '/admin/studio', label: '畫室照片' },
+  { to: '/admin/studio', label: '生活點滴' },
+  { to: '/admin/setup', label: '布展活動' },
   { to: '/admin/comments', label: '留言' },
+  { to: '/admin/messages', label: '私訊' },
   { to: '/admin/members', label: '會員' },
   { to: '/admin/content', label: '網站內容' },
 ]
@@ -31,14 +32,11 @@ export default function AdminLayout() {
           ))}
         </nav>
         <div className="admin-sidebar-foot">
-          <span className="muted">{profile?.display_name ?? (isDemo ? '預覽模式' : '')}</span>
+          <span className="muted">{profile?.display_name}</span>
           <Link to="/">← 返回前台</Link>
         </div>
       </aside>
       <div className="admin-main">
-        {isDemo && (
-          <p className="admin-demo">預覽模式：可以瀏覽後台的所有功能，但無法儲存。接上 Supabase 後才能正式使用。</p>
-        )}
         <Outlet />
       </div>
     </div>

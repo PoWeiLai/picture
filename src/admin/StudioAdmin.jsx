@@ -4,18 +4,24 @@ import { uploadImage, removeImage } from '../lib/storage'
 import { pour } from '../lib/sounds'
 import Dropzone from '../components/Dropzone'
 import { AdminPage } from './AdminLayout'
+import { ALBUMS } from '../lib/albums'
 
-// 管理「畫室日常」照片：批次上傳（每張可寫說明與日期）與刪除
-export default function StudioAdmin() {
+// 管理照片：批次上傳（每張可寫說明與日期）與刪除；album 為 daily（生活點滴）或 setup（布展活動）
+export default function StudioAdmin({ album = 'daily' }) {
+  const info = ALBUMS[album]
   const [photos, setPhotos] = useState([])
   const [items, setItems] = useState([])
   const [busy, setBusy] = useState(false)
   const [progress, setProgress] = useState('')
 
   const load = useCallback(async () => {
-    const { data } = await supabase.from('studio_photos').select('*').order('created_at', { ascending: false })
+    const { data } = await supabase
+      .from('studio_photos')
+      .select('*')
+      .eq('album', album)
+      .order('created_at', { ascending: false })
     setPhotos(data ?? [])
-  }, [])
+  }, [album])
 
   useEffect(() => {
     load()
@@ -59,6 +65,7 @@ export default function StudioAdmin() {
           image_path: path,
           caption: item.caption.trim(),
           taken_on: item.taken_on || null,
+          album,
         })
         if (error) {
           await removeImage(path)
@@ -97,11 +104,11 @@ export default function StudioAdmin() {
   }
 
   return (
-    <AdminPage title="畫室照片" subtitle="前台「畫室日常」頁的照片">
+    <AdminPage title={info.adminLabel} subtitle={`前台「${info.title}」頁的照片`}>
     <div className="admin-columns">
       <form onSubmit={submit} className="panel form">
-        <h2>上傳畫室照片</h2>
-        <Dropzone onFiles={addFiles} hint="畫畫的日常、畫室一角都可以，一次可選多張" />
+        <h2>上傳{info.adminLabel}</h2>
+        <Dropzone onFiles={addFiles} hint={info.uploadHint} />
         {items.length > 0 && (
           <ul className="import-list">
             {items.map((item) => (
@@ -135,7 +142,7 @@ export default function StudioAdmin() {
       </form>
 
       <section className="panel">
-        <h2>畫室照片（{photos.length}）</h2>
+        <h2>{info.adminLabel}（{photos.length}）</h2>
         <ul className="list">
           {photos.map((p) => (
             <li key={p.id}>

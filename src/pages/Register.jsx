@@ -1,11 +1,12 @@
 import { useState } from 'react'
-import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../AuthContext'
 
 export default function Register() {
   const { user } = useAuth()
   const navigate = useNavigate()
+  const from = useLocation().state?.from ?? '/'
   const [displayName, setDisplayName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -13,7 +14,7 @@ export default function Register() {
   const [notice, setNotice] = useState('')
   const [busy, setBusy] = useState(false)
 
-  if (user) return <Navigate to="/" replace />
+  if (user) return <Navigate to={from} replace />
 
   async function submit(e) {
     e.preventDefault()
@@ -31,7 +32,7 @@ export default function Register() {
     if (error) return setError('註冊失敗：' + error.message)
     // Supabase 預設需要 Email 驗證，此時不會有 session
     if (!data.session) return setNotice('註冊成功！請到信箱點擊驗證連結後再登入。')
-    navigate('/')
+    navigate(from)
   }
 
   if (notice) {
@@ -39,7 +40,7 @@ export default function Register() {
       <main className="container narrow">
         <h1>註冊</h1>
         <p>{notice}</p>
-        <Link to="/login">前往登入</Link>
+        <Link to="/login" state={{ from }}>前往登入</Link>
       </main>
     )
   }
@@ -63,7 +64,7 @@ export default function Register() {
         {error && <p className="error">{error}</p>}
         <button type="submit" disabled={busy}>{busy ? '註冊中…' : '註冊'}</button>
       </form>
-      <p className="muted">已經有帳號？<Link to="/login">登入</Link></p>
+      <p className="muted">已經有帳號？<Link to="/login" state={{ from }}>登入</Link></p>
     </main>
   )
 }

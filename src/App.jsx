@@ -1,6 +1,5 @@
-import { Routes, Route, Link, NavLink, Navigate, Outlet, useNavigate, useLocation } from 'react-router-dom'
+import { Routes, Route, Link, NavLink, Navigate, Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from './AuthContext'
-import { supabase } from './lib/supabase'
 import Gallery from './pages/Gallery'
 import PaintingDetail from './pages/PaintingDetail'
 import Login from './pages/Login'
@@ -17,62 +16,82 @@ import MembersAdmin from './admin/MembersAdmin'
 import ContentAdmin from './admin/ContentAdmin'
 import About from './pages/About'
 import Studio from './pages/Studio'
+import Exhibitions from './pages/Exhibitions'
+import Contact from './pages/Contact'
+import MessagesAdmin from './admin/MessagesAdmin'
 import { isDemo } from './lib/supabase'
 import Ornament from './components/Ornament'
 import { toRoman } from './lib/video'
 import { SITE_NAME } from './siteConfig'
-import { useSoundEffects, SoundToggle } from './components/SoundEffects'
+import { useSoundEffects } from './components/SoundEffects'
 import { useBackgroundMusic, MusicToggle, MusicCredit } from './components/BackgroundMusic'
 
+// 右上角的可愛按鈕：未登入時是「登入會員」，登入後顯示名稱、點進去是帳戶頁
+function MemberButton() {
+  const { user, profile } = useAuth()
+  const location = useLocation()
+  const to = user ? '/account' : '/login'
+  const active = ['/login', '/register', '/account'].includes(location.pathname)
+
+  return (
+    <Link to={to} className={active ? 'cute-button member-button active' : 'cute-button member-button'}>
+      {/* 小熊臉 */}
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <circle cx="16" cy="16" r="9" fill="#e8b98a" stroke="#6b4426" strokeWidth="2.5" />
+        <circle cx="48" cy="16" r="9" fill="#e8b98a" stroke="#6b4426" strokeWidth="2.5" />
+        <circle cx="16" cy="16" r="4" fill="#ffc9d4" />
+        <circle cx="48" cy="16" r="4" fill="#ffc9d4" />
+        <circle cx="32" cy="36" r="22" fill="#f3cc9f" stroke="#6b4426" strokeWidth="2.5" />
+        <circle cx="24" cy="33" r="3" fill="#3b2414" />
+        <circle cx="40" cy="33" r="3" fill="#3b2414" />
+        <ellipse cx="32" cy="43" rx="8" ry="6" fill="#fff3e2" />
+        <ellipse cx="32" cy="40.5" rx="3" ry="2.2" fill="#3b2414" />
+        <path d="M29 45q3 2.5 6 0" fill="none" stroke="#3b2414" strokeWidth="2" strokeLinecap="round" />
+        <circle cx="17" cy="42" r="3.5" fill="#ff9fb5" opacity="0.7" />
+        <circle cx="47" cy="42" r="3.5" fill="#ff9fb5" opacity="0.7" />
+      </svg>
+      <span className="cute-label">{user ? (profile?.display_name ?? '會員') : '登入會員'}</span>
+    </Link>
+  )
+}
+
 function Header() {
-  const { user, profile, isAdmin } = useAuth()
-  const navigate = useNavigate()
   const location = useLocation()
   const isVideo = location.pathname === '/' && new URLSearchParams(location.search).get('kind') === 'video'
 
-  async function logout() {
-    await supabase.auth.signOut()
-    navigate('/')
-  }
-
   return (
     <header className="site-header">
+      <div className="corner-buttons">
+        <MusicToggle />
+        <MemberButton />
+      </div>
       <div className="container header-inner">
         <p className="eyebrow">Galleria Privata</p>
         <Link to="/" className="brand">{SITE_NAME}</Link>
         <Ornament />
         <nav className="nav">
-          <NavLink to="/" end className={({ isActive }) => (isActive && !isVideo ? 'active' : '')}>畫廊</NavLink>
+          <NavLink to="/about">個人自傳</NavLink>
           <Link to="/?kind=video#collection" className={isVideo ? 'active' : ''}>影片</Link>
-          <NavLink to="/studio">畫室</NavLink>
-          <NavLink to="/about">畫家</NavLink>
-          {(isAdmin || isDemo) && <NavLink to="/admin">後台</NavLink>}
-          {user ? (
-            <>
-              <NavLink to="/account">{profile?.display_name ?? '帳戶'}</NavLink>
-              <button className="link-button" onClick={logout}>登出</button>
-            </>
-          ) : (
-            <>
-              <NavLink to="/login">登入</NavLink>
-              <NavLink to="/register">註冊</NavLink>
-            </>
-          )}
-          <MusicToggle />
-          <SoundToggle />
+          <NavLink to="/" end className={({ isActive }) => (isActive && !isVideo ? 'active' : '')}>作品</NavLink>
+          <NavLink to="/exhibitions">藝無界、美相遇</NavLink>
+          <NavLink to="/setup">布展活動</NavLink>
+          <NavLink to="/studio">生活點滴</NavLink>
+          <NavLink to="/contact">歡迎私訊我</NavLink>
         </nav>
       </div>
     </header>
   )
 }
 
+// 需要登入才能進入；admin 頁面還必須是管理員（每位管理員各自註冊帳號，再由現任管理員核准）
 function RequireAuth({ children, admin = false }) {
   const { user, isAdmin, loading, profile } = useAuth()
-  // 預覽模式沒有登入功能，直接開放後台瀏覽（所有寫入都會被擋下）
-  if (admin && isDemo) return children
+  const location = useLocation()
   if (loading || (user && !profile)) return <p className="container muted">載入中…</p>
-  if (!user) return <Navigate to="/login" replace />
-  if (admin && !isAdmin) return <Navigate to="/" replace />
+  // 未登入：先去登入，登入後回到原本要去的頁面
+  if (!user) return <Navigate to="/login" replace state={{ from: location.pathname }} />
+  // 已登入但不是管理員：帶到帳戶頁，可以在那裡申請成為管理員
+  if (admin && !isAdmin) return <Navigate to="/account" replace />
   return children
 }
 
@@ -103,8 +122,11 @@ export default function App() {
       <Route element={<FrontLayout />}>
         <Route path="/" element={<Gallery />} />
         <Route path="/paintings/:id" element={<PaintingDetail />} />
-        <Route path="/studio" element={<Studio />} />
+        <Route path="/studio" element={<Studio key="daily" album="daily" />} />
+        <Route path="/setup" element={<Studio key="setup" album="setup" />} />
         <Route path="/about" element={<About />} />
+        <Route path="/exhibitions" element={<Exhibitions />} />
+        <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/account" element={<RequireAuth><Account /></RequireAuth>} />
@@ -114,8 +136,10 @@ export default function App() {
         <Route path="works" element={<WorksAdmin />} />
         <Route path="works/:id" element={<WorkEdit />} />
         <Route path="categories" element={<CategoriesAdmin />} />
-        <Route path="studio" element={<StudioAdmin />} />
+        <Route path="studio" element={<StudioAdmin key="daily" album="daily" />} />
+        <Route path="setup" element={<StudioAdmin key="setup" album="setup" />} />
         <Route path="comments" element={<CommentsAdmin />} />
+        <Route path="messages" element={<MessagesAdmin />} />
         <Route path="members" element={<MembersAdmin />} />
         <Route path="content" element={<ContentAdmin />} />
       </Route>

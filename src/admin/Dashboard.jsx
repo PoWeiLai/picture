@@ -18,11 +18,14 @@ export default function Dashboard() {
     Promise.all([
       count('paintings', (q) => q.is('video_url', null)),
       count('paintings', (q) => q.not('video_url', 'is', null)),
-      count('studio_photos'),
+      count('studio_photos', (q) => q.eq('album', 'daily')),
+      count('studio_photos', (q) => q.eq('album', 'setup')),
       count('comments'),
+      count('messages', (q) => q.eq('is_read', false)),
       count('profiles'),
-    ]).then(([paintings, videos, photos, comments, members]) =>
-      setStats({ paintings, videos, photos, comments, members }),
+      count('admin_requests'),
+    ]).then(([paintings, videos, photos, setup, comments, messages, members, requests]) =>
+      setStats({ paintings, videos, photos, setup, comments, messages, members, requests }),
     )
     supabase
       .from('comments')
@@ -34,9 +37,12 @@ export default function Dashboard() {
   const tiles = [
     { label: '畫作', value: stats?.paintings, to: '/admin/works' },
     { label: '影片', value: stats?.videos, to: '/admin/works?kind=video' },
-    { label: '畫室照片', value: stats?.photos, to: '/admin/studio' },
+    { label: '生活點滴', value: stats?.photos, to: '/admin/studio' },
+    { label: '布展活動', value: stats?.setup, to: '/admin/setup' },
     { label: '留言', value: stats?.comments, to: '/admin/comments' },
+    { label: '未讀私訊', value: stats?.messages, to: '/admin/messages' },
     { label: '會員', value: stats?.members, to: '/admin/members' },
+    { label: '管理員申請', value: stats?.requests, to: '/admin/members' },
   ]
 
   return (
@@ -76,7 +82,8 @@ export default function Dashboard() {
           <h2>快速動作</h2>
           <ul className="quick-actions">
             <li><Link to="/admin/works">匯入新畫作或影片</Link></li>
-            <li><Link to="/admin/studio">上傳畫室照片</Link></li>
+            <li><Link to="/admin/studio">上傳生活點滴照片</Link></li>
+            <li><Link to="/admin/setup">上傳布展活動照片</Link></li>
             <li><Link to="/admin/content">修改首頁封面與畫家介紹</Link></li>
             <li><Link to="/admin/members">管理會員與管理員</Link></li>
           </ul>

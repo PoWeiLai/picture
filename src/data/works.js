@@ -3,11 +3,10 @@
 // image_path 以 / 開頭代表放在 public/ 資料夾的圖片。
 
 export const CATEGORIES = [
-  { id: 1, name: '水彩', sort_order: 1 },
-  { id: 2, name: '油畫', sort_order: 2 },
-  { id: 3, name: '素描', sort_order: 3 },
-  { id: 4, name: '國畫', sort_order: 4 },
-  { id: 5, name: '其他', sort_order: 99 },
+  { id: 4, name: '國畫', sort_order: 1 },
+  { id: 6, name: '熱蠟畫', sort_order: 2 },
+  { id: 1, name: '水彩', sort_order: 3 },
+  { id: 2, name: '油畫', sort_order: 4 },
 ]
 
 export const WORKS = [
@@ -83,7 +82,7 @@ export const WORKS = [
     id: 6,
     title: '水族館特展室許培璟畫作展覽',
     description: '澎湖有線電視地方新聞（2025 年 4 月 23 日）報導護理師畫家許培璟於水族館特展室展出的畫作展覽。',
-    category_id: 5,
+    category_id: null,
     image_path: null,
     video_url: 'https://www.youtube.com/watch?v=hEXc8kK-Y-g',
     year: 2025,
@@ -93,14 +92,15 @@ export const WORKS = [
   },
 ]
 
-// 畫室日常（示範照片）
+// 生活點滴（daily）與布展活動（setup）示範照片
 export const STUDIO_PHOTOS = [
-  { id: 1, image_path: '/about/artist.jpg', caption: '畫家許培璟', taken_on: null, created_at: '2026-09-26T00:00:00Z' },
+  { id: 1, image_path: '/about/artist.jpg', caption: '畫家許培璟', taken_on: null, album: 'daily', created_at: '2026-09-26T00:00:00Z' },
   {
     id: 2,
     image_path: '/works/video-cover.jpg',
     caption: '「醉憶金門」油畫創作個展展場',
     taken_on: '2023-06-02',
+    album: 'setup',
     created_at: '2023-06-02T00:00:00Z',
   },
 ]

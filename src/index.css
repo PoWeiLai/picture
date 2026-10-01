@@ -102,6 +102,7 @@ code { background: var(--surface-2); padding: 0 4px; border-radius: 3px; }
 }
 
 .site-header {
+  position: relative;
   text-align: center;
   padding: 2.25rem 16px 1.25rem;
   background: linear-gradient(180deg, rgb(0 0 0 / 0.55), rgb(0 0 0 / 0.1));
@@ -613,9 +614,6 @@ textarea { resize: vertical; }
 }
 
 /* 音效開關 */
-.nav .sound-toggle { display: inline-flex; align-items: center; gap: 0.35rem; }
-.sound-toggle svg { width: 1.15em; height: 1.15em; flex: none; }
-.sound-toggle[aria-pressed='false'] { opacity: 0.6; }
 
 /* ---------- 捲軸（往下展開的羊皮紙） ---------- */
 :root {
@@ -879,14 +877,6 @@ textarea { resize: vertical; }
 .admin-sidebar-foot a { text-decoration: none; }
 
 .admin-main { padding: 2rem clamp(16px, 3vw, 2.5rem) 4rem; min-width: 0; }
-.admin-demo {
-  margin: 0 0 1.5rem;
-  padding: 0.6rem 1rem;
-  border: 1px solid var(--gold-mid);
-  background: rgb(212 171 79 / 0.1);
-  color: var(--gold-hi);
-  font-size: 1.35rem;
-}
 .admin-page-head { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--gold-lo); }
 .admin-page-head h1 { margin: 0; font-size: 1.7rem; color: var(--gold-hi); }
 .admin-page-head p { margin: 0.2rem 0 0; }
@@ -965,3 +955,98 @@ textarea { resize: vertical; }
   .admin-sidebar-foot { flex-direction: row; justify-content: space-between; }
   .edit-grid { grid-template-columns: 1fr; }
 }
+
+/* 藝無界、美相遇：展覽專區 */
+.exhibit-feature { max-width: 46rem; margin: 0 auto 2.5rem; text-align: center; }
+.exhibit-feature h2 { margin: 0.25rem 0; }
+.exhibit-subtitle { letter-spacing: 0.2em; margin: 0 0 0.5rem; }
+.exhibit-list { max-width: 40rem; margin: 0 auto 2.5rem; }
+
+/* 右上角的可愛按鈕：背景音樂、登入會員 */
+.corner-buttons {
+  position: absolute;
+  top: 0.75rem;
+  right: 16px;
+  display: flex;
+  gap: 0.5rem;
+  z-index: 5;
+}
+.cute-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0;
+  background: none;
+  border: none;
+  color: var(--ink-soft);
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+.cute-button svg {
+  width: 2.1rem;
+  height: 2.1rem;
+  padding: 0.2rem;
+  border-radius: 50%;
+  background: #fff6ea;
+  border: 1.5px solid var(--gold);
+  box-shadow: 0 2px 0 var(--gold-lo), 0 4px 10px rgb(0 0 0 / 0.4);
+  transition: transform 0.2s ease;
+}
+.cute-button:hover svg, .cute-button:focus-visible svg { transform: translateY(-2px) rotate(-6deg); }
+.cute-button:active svg { transform: translateY(1px) scale(0.95); }
+.cute-label { font-size: 0.8rem; letter-spacing: 0.08em; line-height: 1.2; white-space: nowrap; }
+.cute-button:hover .cute-label, .cute-button.active .cute-label { color: var(--gold-hi); }
+.music-button:not(.playing) svg { filter: grayscale(0.6); opacity: 0.8; }
+.music-button.playing .music-note { animation: note-bob 1.2s ease-in-out infinite; transform-origin: 46px 14px; }
+@keyframes note-bob {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-3px) rotate(8deg); }
+}
+.account-actions { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+
+@media (max-width: 760px) {
+  .site-header { padding-top: 4rem; }
+  .corner-buttons { top: 0.5rem; }
+  .cute-button svg { width: 1.9rem; height: 1.9rem; }
+  .cute-label { font-size: 0.75rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .music-button.playing .music-note { animation: none; }
+  .cute-button svg { transition: none; }
+}
+
+/* ---------- 作品頁：一幅一個畫面，置中由上往下 ---------- */
+.gallery-column { display: flex; flex-direction: column; align-items: center; }
+.gallery-item {
+  min-height: 92vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 0;
+  text-decoration: none;
+  animation: hang-in 0.8s ease-out both;
+}
+.gallery-item .frame { width: fit-content; max-width: 100%; transition: transform 0.4s ease; }
+.gallery-item:hover .frame { transform: translateY(-5px) scale(1.01); }
+.gallery-item .frame img { width: auto; max-width: 100%; max-height: 78vh; margin: 0 auto; }
+.gallery-item .video-thumb { width: min(80vw, 56rem); max-height: 78vh; }
+@media (prefers-reduced-motion: reduce) {
+  .gallery-item { animation: none; }
+}
+
+/* 留言簿：畫家回覆 */
+.reply {
+  margin-top: 0.75rem;
+  padding: 0.6rem 1rem;
+  border-left: 3px solid var(--gold);
+  background: rgb(212 171 79 / 0.08);
+  border-radius: 0 6px 6px 0;
+}
+.reply .letter-head strong { color: var(--gold-hi); }
+.reply p { margin: 0.25rem 0 0; }
+.reply-form { margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.5rem; }
+.reply-form textarea { width: 100%; }
+.reply-actions { display: flex; gap: 0.75rem; align-items: center; }

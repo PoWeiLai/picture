@@ -25,9 +25,9 @@ values ('醉憶金門・展場紀錄', '於「醉憶金門」油畫創作個展�
 -- 影片作品（YouTube）：澎湖有線電視新聞報導
 insert into public.paintings (title, description, category_id, video_url, year, medium, created_at)
 values ('水族館特展室許培璟畫作展覽', '澎湖有線電視地方新聞（2025 年 4 月 23 日）報導護理師畫家許培璟於水族館特展室展出的畫作展覽。',
-        (select id from public.categories where name = '其他'), 'https://www.youtube.com/watch?v=hEXc8kK-Y-g', 2025, '', '2025-04-23');
+        null, 'https://www.youtube.com/watch?v=hEXc8kK-Y-g', 2025, '', '2025-04-23');
 
--- 畫室日常（示範照片，可在管理頁刪除或替換）
-insert into public.studio_photos (image_path, caption, taken_on) values
-  ('/about/artist.jpg', '畫家許培璟', null),
-  ('/works/video-cover.jpg', '「醉憶金門」油畫創作個展展場', '2023-06-02');
+-- 生活點滴與布展活動（示範照片，可在管理頁刪除或替換）
+insert into public.studio_photos (image_path, caption, taken_on, album) values
+  ('/about/artist.jpg', '畫家許培璟', null, 'daily'),
+  ('/works/video-cover.jpg', '「醉憶金門」油畫創作個展展場', '2023-06-02', 'setup');

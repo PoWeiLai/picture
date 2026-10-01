@@ -1,9 +1,12 @@
 import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../AuthContext'
+import AdminRequest from '../components/AdminRequest'
 
 export default function Account() {
-  const { user, profile, refreshProfile } = useAuth()
+  const { user, profile, isAdmin, refreshProfile } = useAuth()
+  const navigate = useNavigate()
   const [displayName, setDisplayName] = useState(profile.display_name)
   const [nameMsg, setNameMsg] = useState('')
   const [password, setPassword] = useState('')
@@ -31,10 +34,19 @@ export default function Account() {
     }
   }
 
+  async function logout() {
+    await supabase.auth.signOut()
+    navigate('/')
+  }
+
   return (
     <main className="container narrow">
       <h1>帳戶設定</h1>
       <p className="muted">Email：{user.email}</p>
+      <p className="account-actions">
+        {isAdmin && <Link to="/admin" className="button">進入後台</Link>}
+        <button type="button" onClick={logout}>登出</button>
+      </p>
 
       <form onSubmit={saveName} className="panel form">
         <h2>顯示名稱</h2>
@@ -56,6 +68,8 @@ export default function Account() {
         {pwMsg && <p className="muted">{pwMsg}</p>}
         <button type="submit">更新密碼</button>
       </form>
+
+      <AdminRequest />
     </main>
   )
 }

@@ -1,18 +1,11 @@
 import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { supabase, imageUrl } from '../lib/supabase'
-import { toRoman } from '../lib/video'
 import { WorkThumb } from '../components/WorkMedia'
 import Ornament from '../components/Ornament'
 import { useSiteContent } from '../lib/siteContent'
 import ScrollPaper from '../components/ScrollPaper'
 import PenText from '../components/PenText'
-
-const KINDS = [
-  { value: '', label: '全部' },
-  { value: 'image', label: '畫作' },
-  { value: 'video', label: '影片' },
-]
 
 function Hero() {
   const { hero: HERO } = useSiteContent()
@@ -56,7 +49,8 @@ export default function Gallery() {
   const [error, setError] = useState('')
   const [params, setParams] = useSearchParams()
   const activeCategory = params.get('category') ?? ''
-  const kind = params.get('kind') ?? ''
+  // 導覽列的「影片」帶 ?kind=video；「作品」只顯示畫作
+  const isVideo = params.get('kind') === 'video'
 
   useEffect(() => {
     supabase.from('categories').select('*').order('sort_order').then(({ data }) => setCategories(data ?? []))
@@ -68,13 +62,12 @@ export default function Gallery() {
       .select('id, title, image_path, video_url, year, dimensions, created_at, categories(name)')
       .order('created_at', { ascending: false })
     if (activeCategory) query = query.eq('category_id', activeCategory)
-    if (kind === 'video') query = query.not('video_url', 'is', null)
-    if (kind === 'image') query = query.is('video_url', null)
+    query = isVideo ? query.not('video_url', 'is', null) : query.is('video_url', null)
     query.then(({ data, error }) => {
       if (error) setError(error.message)
       setWorks(data ?? [])
     })
-  }, [activeCategory, kind])
+  }, [activeCategory, isVideo])
 
   function update(key, value) {
     const next = new URLSearchParams(params)
@@ -85,38 +78,32 @@ export default function Gallery() {
 
   return (
     <main className="container">
-      {!activeCategory && !kind && <Hero />}
+      {!activeCategory && !isVideo && <Hero />}
 
       <header className="page-title" id="collection">
         <p className="eyebrow">Collezione</p>
-        <h1>典藏作品</h1>
+        <h1>{isVideo ? '影片' : '典藏作品'}</h1>
         <Ornament />
         <p className="tagline">每一筆色彩，都是一段時光的收藏。</p>
       </header>
 
-      <nav className="filters" aria-label="篩選">
+      {!isVideo && (
+      <nav className="filters" aria-label="分類">
         <div className="filter-row">
-          {KINDS.map((k) => (
-            <button key={k.value} className={kind === k.value ? 'tab active' : 'tab'} onClick={() => update('kind', k.value)}>
-              {k.label}
-            </button>
-          ))}
-        </div>
-        <div className="filter-row">
-          <button className={!activeCategory ? 'chip active' : 'chip'} onClick={() => update('category', '')}>
-            所有風格
-          </button>
+          {/* 再點一次已選的分類就取消篩選，回到全部作品 */}
           {categories.map((c) => (
             <button
               key={c.id}
               className={activeCategory === String(c.id) ? 'chip active' : 'chip'}
-              onClick={() => update('category', String(c.id))}
+              onClick={() => update('category', activeCategory === String(c.id) ? '' : String(c.id))}
+              aria-pressed={activeCategory === String(c.id)}
             >
               {c.name}
             </button>
           ))}
         </div>
       </nav>
+      )}
 
       {error && <p className="error">{error}</p>}
       {works === null ? (
@@ -124,23 +111,20 @@ export default function Gallery() {
       ) : works.length === 0 ? (
         <p className="muted center">這裡還沒有作品。</p>
       ) : (
-        <div className="salon">
-          {works.map((w, i) => (
+        // 一幅作品佔一個畫面、置中由上往下排列；文字介紹只在點進去的作品頁顯示
+        <div className="gallery-column">
+          {works.map((w) => (
             <Link
               key={w.id}
               to={`/paintings/${w.id}`}
-              className="salon-item"
-              style={{ '--i': i }}
+              className="gallery-item"
+              aria-label={`${w.title}（點擊觀看介紹）`}
+              title="點擊觀看介紹"
             >
               <div className="frame">
                 <div className="frame-mat">
                   <WorkThumb work={w} />
                 </div>
-              </div>
-              <div className="placard">
-                <span className="placard-no">N° {toRoman(w.id)}</span>
-                <span className="placard-title">{w.title}</span>
-                <span className="placard-style">{[w.year, w.dimensions].filter(Boolean).join(' · ') || w.categories?.name}</span>
               </div>
             </Link>
           ))}

@@ -69,6 +69,8 @@ create table public.comments (
   painting_id bigint not null references public.paintings (id) on delete cascade,
   user_id uuid not null default auth.uid() references public.profiles (id) on delete cascade,
   body text not null check (char_length(body) between 1 and 1000),
+  reply text check (char_length(reply) between 1 and 1000),
+  replied_at timestamptz,
   created_at timestamptz not null default now()
 );
 
@@ -97,19 +99,22 @@ create policy "paintings 公開讀取" on public.paintings for select using (tru
 create policy "paintings 管理員寫入" on public.paintings for all
   using (public.is_admin()) with check (public.is_admin());
 
--- comments：公開讀取；登入者以自己身分發言；本人或管理員可刪除
+-- comments：公開讀取；登入者以自己身分發言（不能自己填回覆）；只有管理員能回覆；本人或管理員可刪除
 create policy "comments 公開讀取" on public.comments for select using (true);
 create policy "comments 登入者新增" on public.comments for insert to authenticated
-  with check (user_id = auth.uid());
+  with check (user_id = auth.uid() and reply is null and replied_at is null);
+create policy "comments 管理員回覆" on public.comments for update to authenticated
+  using (public.is_admin()) with check (public.is_admin());
 create policy "comments 本人或管理員刪除" on public.comments for delete to authenticated
   using (user_id = auth.uid() or public.is_admin());
 
--- ========== 畫室日常照片 ==========
+-- ========== 照片（生活點滴 daily／布展活動 setup） ==========
 create table public.studio_photos (
   id bigint generated always as identity primary key,
   image_path text not null,
   caption text not null default '' check (char_length(caption) <= 200),
   taken_on date,
+  album text not null default 'daily' check (album in ('daily', 'setup')),
   created_at timestamptz not null default now()
 );
 
@@ -131,9 +136,66 @@ create policy "site_settings 公開讀取" on public.site_settings for select us
 create policy "site_settings 管理員寫入" on public.site_settings for all
   using (public.is_admin()) with check (public.is_admin());
 
--- 會員列表（含 Email），只有管理員能呼叫
+-- 會員申請成為管理員，由管理員核准或拒絕
+create table public.admin_requests (
+  user_id uuid primary key default auth.uid() references public.profiles (id) on delete cascade,
+  note text not null default '' check (char_length(note) <= 500),
+  created_at timestamptz not null default now()
+);
+
+-- 本人可以送出、查看、取消自己的申請；管理員可以查看全部並拒絕（刪除）
+alter table public.admin_requests enable row level security;
+create policy "admin_requests 本人或管理員讀取" on public.admin_requests for select to authenticated
+  using (user_id = auth.uid() or public.is_admin());
+create policy "admin_requests 會員申請" on public.admin_requests for insert to authenticated
+  with check (user_id = auth.uid() and not public.is_admin());
+create policy "admin_requests 本人取消或管理員拒絕" on public.admin_requests for delete to authenticated
+  using (user_id = auth.uid() or public.is_admin());
+
+-- 同意某位會員的管理員申請：升為管理員並清掉申請
+create function public.approve_admin(target uuid)
+returns void
+language plpgsql
+security definer set search_path = ''
+as $$
+begin
+  if not public.is_admin() then
+    raise exception '需要管理員權限';
+  end if;
+  if not exists (select 1 from public.admin_requests where user_id = target) then
+    raise exception '找不到這位會員的申請';
+  end if;
+  update public.profiles set is_admin = true where id = target;
+  delete from public.admin_requests where user_id = target;
+end;
+$$;
+revoke execute on function public.approve_admin(uuid) from public, anon;
+grant execute on function public.approve_admin(uuid) to authenticated;
+
+-- set_admin 只能用來取消管理員；新增管理員一律走申請與同意流程
+create function public.set_admin(target uuid, value boolean)
+returns void
+language plpgsql
+security definer set search_path = ''
+as $$
+begin
+  if not public.is_admin() then
+    raise exception '需要管理員權限';
+  end if;
+  if value then
+    raise exception '新增管理員需要對方先申請，並由管理員同意';
+  end if;
+  if target = auth.uid() then
+    raise exception '不能取消自己的管理員身分';
+  end if;
+  update public.profiles set is_admin = false where id = target;
+end;
+$$;
+
+-- 會員列表（含 Email 與管理員申請），只有管理員能呼叫
 create function public.admin_list_members()
-returns table (id uuid, email text, display_name text, is_admin boolean, created_at timestamptz, comment_count bigint)
+returns table (id uuid, email text, display_name text, is_admin boolean, created_at timestamptz, comment_count bigint,
+               requested_at timestamptz, request_note text)
 language plpgsql
 stable
 security definer set search_path = ''
@@ -144,33 +206,18 @@ begin
   end if;
   return query
     select p.id, u.email::text, p.display_name, p.is_admin, p.created_at,
-           (select count(*) from public.comments c where c.user_id = p.id)
+           (select count(*) from public.comments c where c.user_id = p.id),
+           r.created_at, r.note
     from public.profiles p
     join auth.users u on u.id = p.id
-    order by p.created_at desc;
+    left join public.admin_requests r on r.user_id = p.id
+    order by r.created_at desc nulls last, p.created_at desc;
 end;
 $$;
-
--- 設定或取消管理員；不能取消自己的管理員身分，避免沒人能管理網站
-create function public.set_admin(target uuid, value boolean)
-returns void
-language plpgsql
-security definer set search_path = ''
-as $$
-begin
-  if not public.is_admin() then
-    raise exception '需要管理員權限';
-  end if;
-  if target = auth.uid() and not value then
-    raise exception '不能取消自己的管理員身分';
-  end if;
-  update public.profiles set is_admin = value where id = target;
-end;
-$$;
-
 revoke execute on function public.admin_list_members() from public, anon;
-revoke execute on function public.set_admin(uuid, boolean) from public, anon;
 grant execute on function public.admin_list_members() to authenticated;
+
+revoke execute on function public.set_admin(uuid, boolean) from public, anon;
 grant execute on function public.set_admin(uuid, boolean) to authenticated;
 
 -- ========== 圖片儲存 ==========
@@ -183,9 +230,27 @@ create policy "paintings 圖片管理員修改" on storage.objects for update to
 create policy "paintings 圖片管理員刪除" on storage.objects for delete to authenticated
   using (bucket_id = 'paintings' and public.is_admin());
 
+-- ========== 「歡迎私訊我」訪客私訊 ==========
+create table public.messages (
+  id bigint generated always as identity primary key,
+  name text not null check (char_length(name) between 1 and 50),
+  email text not null check (char_length(email) between 3 and 200),
+  body text not null check (char_length(body) between 1 and 2000),
+  is_read boolean not null default false,
+  created_at timestamptz not null default now()
+);
+
+-- 任何訪客（不用登入）都能送出；只有管理員能讀取、標記已讀與刪除
+alter table public.messages enable row level security;
+create policy "messages 訪客送出" on public.messages for insert to anon, authenticated
+  with check (is_read = false);
+create policy "messages 管理員讀取" on public.messages for select using (public.is_admin());
+create policy "messages 管理員修改" on public.messages for update using (public.is_admin()) with check (public.is_admin());
+create policy "messages 管理員刪除" on public.messages for delete using (public.is_admin());
+
 -- ========== 預設分類（可自行修改） ==========
 insert into public.categories (name, sort_order) values
-  ('水彩', 1), ('油畫', 2), ('素描', 3), ('國畫', 4), ('其他', 99);
+  ('國畫', 1), ('熱蠟畫', 2), ('水彩', 3), ('油畫', 4);
 
 -- ========== 設定媽媽為管理員 ==========
 -- 媽媽先在網站上註冊帳號後，把下面的 email 換成她的，再單獨執行這一行：

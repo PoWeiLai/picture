@@ -2,8 +2,11 @@ import { useCallback, useEffect, useState } from 'react'
 import { supabase, imageUrl, formatDate } from '../lib/supabase'
 import Ornament from '../components/Ornament'
 import Lightbox from '../components/Lightbox'
+import { ALBUMS } from '../lib/albums'
 
-export default function Studio() {
+// 照片牆：album 為 daily（生活點滴）或 setup（布展活動）
+export default function Studio({ album = 'daily' }) {
+  const info = ALBUMS[album]
   const [photos, setPhotos] = useState(null)
   const [open, setOpen] = useState(null)
   const close = useCallback(() => setOpen(null), [])
@@ -12,17 +15,18 @@ export default function Studio() {
     supabase
       .from('studio_photos')
       .select('*')
+      .eq('album', album)
       .order('created_at', { ascending: false })
       .then(({ data }) => setPhotos(data ?? []))
-  }, [])
+  }, [album])
 
   return (
     <main className="container">
       <header className="page-title">
-        <p className="eyebrow">Lo Studio</p>
-        <h1>畫室日常</h1>
+        <p className="eyebrow">{info.eyebrow}</p>
+        <h1>{info.title}</h1>
         <Ornament />
-        <p className="tagline">畫布之外，那些拿起畫筆的平凡日子。</p>
+        <p className="tagline">{info.tagline}</p>
       </header>
 
       {photos === null ? (
