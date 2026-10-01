@@ -1,4 +1,4 @@
-// 背景音樂：整個網站共用一份播放清單，換頁時不中斷，一首播完自動接下一首，全部播完從頭再來。
+// 背景音樂：整個網站共用一份播放清單，隨機順序播放，換頁時不中斷；一首播完自動接下一首，全部播完重新洗牌。
 // 古典樂錄音來自維基共享資源（公有領域或創用 CC 授權），授權要求標示出處，所以頁尾會顯示目前播放的曲目與授權。
 // 檔案都放在 public/music/。
 
@@ -16,21 +16,21 @@ export const TRACKS = {
   'love-song': {
     src: '/music/love-song.m4a',
     title: '情歌',
-    performer: 'Po-Wei Lai',
+    performer: 'Po-Wei Lai（鋼琴）',
     license: 'YouTube',
     source: 'https://www.youtube.com/watch?v=hkhr4cEY4fE',
   },
   'always-with-me': {
     src: '/music/always-with-me.m4a',
     title: '宮崎駿〈Always with me〉',
-    performer: 'Po-Wei Lai',
+    performer: 'Po-Wei Lai（鋼琴）',
     license: 'YouTube',
     source: 'https://www.youtube.com/watch?v=Gqk6ou9NgF8',
   },
   'kikis-delivery-service': {
     src: '/music/kikis-delivery-service.m4a',
     title: '宮崎駿〈魔女宅急便〉',
-    performer: 'Po-Wei Lai',
+    performer: 'Po-Wei Lai（鋼琴）',
     license: 'YouTube',
     source: 'https://www.youtube.com/watch?v=ubhkaERcqdw',
   },
@@ -76,9 +76,18 @@ export const TRACKS = {
   },
 }
 
-// 播放順序：照 TRACKS 的順序
-const PLAYLIST = Object.keys(TRACKS)
+// 洗牌（Fisher–Yates）；avoid 是上一輪最後一首，避免新一輪第一首和它重複
+function shuffled(avoid) {
+  const list = Object.keys(TRACKS)
+  for (let i = list.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[list[i], list[j]] = [list[j], list[i]]
+  }
+  if (list[0] === avoid) [list[0], list[1]] = [list[1], list[0]]
+  return list
+}
 
+let playlist = shuffled()
 let audio = null
 let index = 0 // 目前在播放清單的第幾首
 let paused = false // 後台不播音樂
@@ -95,7 +104,7 @@ function readEnabled() {
 }
 
 function currentTrack() {
-  return paused ? null : PLAYLIST[index]
+  return paused ? null : playlist[index]
 }
 
 function notify() {
@@ -142,7 +151,7 @@ function fadeTo(target, done) {
 function play() {
   const el = element()
   if (!enabled || paused) return
-  const src = TRACKS[PLAYLIST[index]].src
+  const src = TRACKS[playlist[index]].src
   if (!el.src.endsWith(src)) {
     el.src = src
     el.volume = 0
@@ -152,7 +161,14 @@ function play() {
 
 // 換到下一首（step = 1）或上一首（step = -1）
 export function skip(step = 1) {
-  index = (index + step + PLAYLIST.length) % PLAYLIST.length
+  index += step
+  if (index >= playlist.length) {
+    // 整份清單播完：重新洗牌再播一輪
+    playlist = shuffled(playlist[playlist.length - 1])
+    index = 0
+  } else if (index < 0) {
+    index = playlist.length - 1
+  }
   notify()
   const el = element()
   if (el.paused) return play()
