@@ -28,8 +28,8 @@ export function MusicToggle() {
       title={info ? `${enabled ? '正在播放' : '已關閉'}：${info.title}` : '背景音樂'}
     >
       {/* 媽媽編織的粉紅裙子白鵝；播放時旁邊有跳動的音符，關掉時變灰 */}
-      <span className="cute-icon">
-        <img src="/icons/music-goose.jpg" alt="" />
+      <span className="cute-icon doll-icon">
+        <img src="/icons/doll-goose.png" alt="" />
         <span className="music-note" aria-hidden="true">♪</span>
       </span>
       <span className="cute-label">音樂{enabled ? '開' : '關'}</span>
@@ -46,7 +46,7 @@ export function MusicCredit() {
     <div className="music-credit">
       {/* 左右兩邊是媽媽編織的娃娃：左邊上一首、右邊下一首 */}
       <button type="button" className="doll-skip" data-sound="none" onClick={() => skip(-1)} title="上一首" aria-label="上一首">
-        <img src="/icons/music-prev-blue.jpg" alt="" />
+        <img src="/icons/doll-blue.png" alt="" />
         <span>上一首</span>
       </button>
       <p>
@@ -54,7 +54,7 @@ export function MusicCredit() {
         <a href={info.source} target="_blank" rel="noreferrer">{info.license}</a>
       </p>
       <button type="button" className="doll-skip" data-sound="none" onClick={() => skip(1)} title="下一首" aria-label="下一首">
-        <img src="/icons/music-next-red.jpg" alt="" />
+        <img src="/icons/doll-red.png" alt="" />
         <span>下一首</span>
       </button>
     </div>

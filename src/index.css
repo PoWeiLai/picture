@@ -166,13 +166,11 @@ code { background: var(--surface-2); padding: 0 4px; border-radius: 3px; }
   font-size: 0.8rem;
   cursor: pointer;
 }
+/* 去背的娃娃：保留原本形狀，不加圓框 */
 .doll-skip img {
-  width: 2.6rem;
-  height: 2.6rem;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 1.5px solid var(--gold);
-  box-shadow: 0 2px 0 var(--gold-lo), 0 4px 10px rgb(0 0 0 / 0.4);
+  height: 3.6rem;
+  width: auto;
+  filter: drop-shadow(0 3px 4px rgb(0 0 0 / 0.6));
   transition: transform 0.2s ease;
 }
 .doll-skip:hover img, .doll-skip:focus-visible img { transform: translateY(-2px) rotate(-6deg); }
@@ -1037,7 +1035,18 @@ textarea { resize: vertical; }
 .cute-button:hover .cute-label, .cute-button.active .cute-label { color: var(--gold-hi); }
 .cute-icon { position: relative; display: block; }
 .cute-icon img { display: block; object-fit: cover; padding: 0; }
-.music-button:not(.playing) img { filter: grayscale(1); opacity: 0.6; }
+/* 右上角音樂開關的白鵝：去背、不加圓框 */
+.cute-icon.doll-icon img {
+  width: auto;
+  height: 2.9rem;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  filter: drop-shadow(0 2px 3px rgb(0 0 0 / 0.6));
+}
+.music-button:not(.playing) img { filter: grayscale(1) drop-shadow(0 2px 3px rgb(0 0 0 / 0.6)); opacity: 0.6; }
 .music-note {
   position: absolute;
   top: -0.35rem;
@@ -1059,6 +1068,7 @@ textarea { resize: vertical; }
   .site-header { padding-top: 4rem; }
   .corner-buttons { top: 0.5rem; }
   .cute-button svg, .cute-icon img { width: 1.9rem; height: 1.9rem; }
+  .cute-icon.doll-icon img { width: auto; height: 2.5rem; }
   .cute-label { font-size: 0.75rem; }
 }
 @media (prefers-reduced-motion: reduce) {
