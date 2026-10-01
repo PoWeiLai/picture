@@ -15,6 +15,11 @@ export function imageUrl(path) {
   return supabase.storage.from('paintings').getPublicUrl(path).data.publicUrl
 }
 
+// 個人頭像的公開網址（avatars bucket）
+export function avatarUrl(path) {
+  return supabase.storage.from('avatars').getPublicUrl(path).data.publicUrl
+}
+
 export function formatDate(iso) {
   return new Date(iso).toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' })
 }

@@ -6,6 +6,7 @@ create table public.profiles (
   id uuid primary key references auth.users (id) on delete cascade,
   display_name text not null check (char_length(display_name) between 1 and 30),
   is_admin boolean not null default false,
+  avatar_path text check (char_length(avatar_path) <= 300),
   created_at timestamptz not null default now()
 );
 
@@ -83,12 +84,12 @@ alter table public.categories enable row level security;
 alter table public.paintings enable row level security;
 alter table public.comments enable row level security;
 
--- profiles：大家都能看名字；本人只能改自己的 display_name（不能把自己改成管理員）
+-- profiles：大家都能看名字與頭像；本人只能改自己的 display_name 與 avatar_path（不能把自己改成管理員）
 create policy "profiles 公開讀取" on public.profiles for select using (true);
 create policy "profiles 本人更新" on public.profiles for update
   using (id = auth.uid()) with check (id = auth.uid());
 revoke update on public.profiles from authenticated, anon;
-grant update (display_name) on public.profiles to authenticated;
+grant update (display_name, avatar_path) on public.profiles to authenticated;
 
 -- categories / paintings：公開讀取，只有管理員能新增修改刪除
 create policy "categories 公開讀取" on public.categories for select using (true);
@@ -206,6 +207,18 @@ create policy "paintings 圖片管理員修改" on storage.objects for update to
   using (bucket_id = 'paintings' and public.is_admin());
 create policy "paintings 圖片管理員刪除" on storage.objects for delete to authenticated
   using (bucket_id = 'paintings' and public.is_admin());
+
+-- ========== 個人頭像 ==========
+-- 頭像存放空間：公開讀取；每個人只能在以自己 id 命名的資料夾裡上傳、替換、刪除
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('avatars', 'avatars', true, 2097152, array['image/jpeg', 'image/png', 'image/webp']);
+
+create policy "avatars 本人上傳" on storage.objects for insert to authenticated
+  with check (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
+create policy "avatars 本人修改" on storage.objects for update to authenticated
+  using (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
+create policy "avatars 本人刪除" on storage.objects for delete to authenticated
+  using (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
 
 -- ========== 「歡迎私訊我」訪客私訊 ==========
 create table public.messages (

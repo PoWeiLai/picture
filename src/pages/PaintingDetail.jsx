@@ -7,6 +7,7 @@ import { WorkPlayer } from '../components/WorkMedia'
 import { pour } from '../lib/sounds'
 import ScrollPaper from '../components/ScrollPaper'
 import Ornament from '../components/Ornament'
+import Avatar from '../components/Avatar'
 
 export default function PaintingDetail() {
   const { id } = useParams()
@@ -24,7 +25,7 @@ export default function PaintingDetail() {
   const loadComments = useCallback(async () => {
     const { data } = await supabase
       .from('comments')
-      .select('id, body, reply, replied_at, created_at, user_id, profiles(display_name, is_admin)')
+      .select('id, body, reply, replied_at, created_at, user_id, profiles(display_name, is_admin, avatar_path)')
       .eq('painting_id', id)
       .order('created_at')
     setComments(data ?? [])
@@ -117,7 +118,7 @@ export default function PaintingDetail() {
             const name = c.profiles?.display_name ?? '匿名'
             return (
               <li key={c.id} className="letter">
-                <span className="seal" aria-hidden="true">{name.slice(0, 1)}</span>
+                <Avatar profile={c.profiles} />
                 <div className="letter-body">
                   <div className="letter-head">
                     <strong>{name}</strong>

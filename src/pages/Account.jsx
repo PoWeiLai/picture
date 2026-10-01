@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase'
 import { useAuth } from '../AuthContext'
 import AdminRequest from '../components/AdminRequest'
 import PasswordForm from '../components/PasswordForm'
+import AvatarUpload from '../components/AvatarUpload'
 
 export default function Account() {
   const { user, profile, isAdmin, refreshProfile } = useAuth()
@@ -34,6 +35,8 @@ export default function Account() {
         {isAdmin && <Link to="/admin" className="button">進入後台</Link>}
         <button type="button" onClick={logout}>登出</button>
       </p>
+
+      <AvatarUpload />
 
       <form onSubmit={saveName} className="panel form">
         <h2>顯示名稱</h2>

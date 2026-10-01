@@ -140,7 +140,44 @@ code { background: var(--surface-2); padding: 0 4px; border-radius: 3px; }
   background: rgb(0 0 0 / 0.35);
 }
 .site-footer p { margin: 0.25rem 0 0; font-family: var(--display); font-style: italic; }
-.site-footer .music-credit { font-family: var(--serif); font-style: normal; font-size: 1.2rem; color: var(--ink-soft); }
+.site-footer .music-credit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  font-family: var(--serif);
+  font-style: normal;
+  font-size: 1.2rem;
+  color: var(--ink-soft);
+}
+.music-credit p { margin: 0; }
+/* 頁尾的上一首／下一首娃娃按鈕 */
+.doll-skip {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0;
+  background: none;
+  border: none;
+  color: var(--ink-soft);
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.doll-skip img {
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid var(--gold);
+  box-shadow: 0 2px 0 var(--gold-lo), 0 4px 10px rgb(0 0 0 / 0.4);
+  transition: transform 0.2s ease;
+}
+.doll-skip:hover img, .doll-skip:focus-visible img { transform: translateY(-2px) rotate(-6deg); }
+.doll-skip:active img { transform: scale(0.92); }
+.doll-skip:hover span { color: var(--gold-hi); }
 
 .page-title { text-align: center; margin: 1rem 0 2.5rem; scroll-margin-top: 1rem; }
 .page-title h1 { margin: 0; }
@@ -984,7 +1021,7 @@ textarea { resize: vertical; }
   text-decoration: none;
   cursor: pointer;
 }
-.cute-button svg {
+.cute-button svg, .cute-icon img {
   width: 2.1rem;
   height: 2.1rem;
   padding: 0.2rem;
@@ -994,12 +1031,24 @@ textarea { resize: vertical; }
   box-shadow: 0 2px 0 var(--gold-lo), 0 4px 10px rgb(0 0 0 / 0.4);
   transition: transform 0.2s ease;
 }
-.cute-button:hover svg, .cute-button:focus-visible svg { transform: translateY(-2px) rotate(-6deg); }
-.cute-button:active svg { transform: translateY(1px) scale(0.95); }
+.cute-button:hover :is(svg, img), .cute-button:focus-visible :is(svg, img) { transform: translateY(-2px) rotate(-6deg); }
+.cute-button:active :is(svg, img) { transform: translateY(1px) scale(0.95); }
 .cute-label { font-size: 0.8rem; letter-spacing: 0.08em; line-height: 1.2; white-space: nowrap; }
 .cute-button:hover .cute-label, .cute-button.active .cute-label { color: var(--gold-hi); }
-.music-button:not(.playing) svg { filter: grayscale(0.6); opacity: 0.8; }
-.music-button.playing .music-note { animation: note-bob 1.2s ease-in-out infinite; transform-origin: 46px 14px; }
+.cute-icon { position: relative; display: block; }
+.cute-icon img { display: block; object-fit: cover; padding: 0; }
+.music-button:not(.playing) img { filter: grayscale(1); opacity: 0.6; }
+.music-note {
+  position: absolute;
+  top: -0.35rem;
+  right: -0.35rem;
+  font-size: 0.85rem;
+  line-height: 1;
+  color: var(--gold-hi);
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.8);
+}
+.music-button:not(.playing) .music-note { display: none; }
+.music-button.playing .music-note { animation: note-bob 1.2s ease-in-out infinite; }
 @keyframes note-bob {
   0%, 100% { transform: translateY(0) rotate(0); }
   50% { transform: translateY(-3px) rotate(8deg); }
@@ -1009,12 +1058,12 @@ textarea { resize: vertical; }
 @media (max-width: 760px) {
   .site-header { padding-top: 4rem; }
   .corner-buttons { top: 0.5rem; }
-  .cute-button svg { width: 1.9rem; height: 1.9rem; }
+  .cute-button svg, .cute-icon img { width: 1.9rem; height: 1.9rem; }
   .cute-label { font-size: 0.75rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   .music-button.playing .music-note { animation: none; }
-  .cute-button svg { transition: none; }
+  .cute-button svg, .cute-icon img { transition: none; }
 }
 
 /* ---------- 作品頁：一幅一個畫面，置中由上往下 ---------- */
@@ -1056,3 +1105,10 @@ textarea { resize: vertical; }
 .admin-login { padding-top: 4rem; }
 .admin-login > .eyebrow { margin: 0; }
 .admin-narrow { max-width: 520px; }
+
+/* 個人頭像 */
+.seal-photo { object-fit: cover; padding: 0; background: var(--surface-2); }
+.avatar-large { width: 96px; height: 96px; font-size: 2.4rem; align-self: center; }
+.avatar-small { width: 26px; height: 26px; font-size: 0.85rem; display: inline-grid; vertical-align: middle; box-shadow: 0 0 0 1px var(--gold-mid); }
+.admin-me { display: flex; align-items: center; gap: 0.5rem; color: var(--ink-soft); }
+.avatar-upload label.button { cursor: pointer; }

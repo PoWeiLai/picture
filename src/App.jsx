@@ -29,6 +29,7 @@ import { toRoman } from './lib/video'
 import { SITE_NAME } from './siteConfig'
 import { useSoundEffects } from './components/SoundEffects'
 import { useBackgroundMusic, MusicToggle, MusicCredit } from './components/BackgroundMusic'
+import { avatarUrl } from './lib/supabase'
 
 // 右上角的可愛按鈕：未登入時是「登入會員」，登入後顯示名稱、點進去是帳戶頁
 function MemberButton() {
@@ -39,7 +40,10 @@ function MemberButton() {
 
   return (
     <Link to={to} className={active ? 'cute-button member-button active' : 'cute-button member-button'}>
-      {/* 小熊臉 */}
+      {/* 有頭像就顯示頭像，否則是小熊臉 */}
+      {profile?.avatar_path ? (
+        <span className="cute-icon"><img src={avatarUrl(profile.avatar_path)} alt="" /></span>
+      ) : (
       <svg viewBox="0 0 64 64" aria-hidden="true">
         <circle cx="16" cy="16" r="9" fill="#e8b98a" stroke="#6b4426" strokeWidth="2.5" />
         <circle cx="48" cy="16" r="9" fill="#e8b98a" stroke="#6b4426" strokeWidth="2.5" />
@@ -54,6 +58,7 @@ function MemberButton() {
         <circle cx="17" cy="42" r="3.5" fill="#ff9fb5" opacity="0.7" />
         <circle cx="47" cy="42" r="3.5" fill="#ff9fb5" opacity="0.7" />
       </svg>
+      )}
       <span className="cute-label">{user ? (profile?.display_name ?? '會員') : '登入會員'}</span>
     </Link>
   )
