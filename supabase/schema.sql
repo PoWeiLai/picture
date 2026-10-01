@@ -172,26 +172,6 @@ $$;
 revoke execute on function public.approve_admin(uuid) from public, anon;
 grant execute on function public.approve_admin(uuid) to authenticated;
 
--- set_admin 只能用來取消管理員；新增管理員一律走申請與同意流程
-create function public.set_admin(target uuid, value boolean)
-returns void
-language plpgsql
-security definer set search_path = ''
-as $$
-begin
-  if not public.is_admin() then
-    raise exception '需要管理員權限';
-  end if;
-  if value then
-    raise exception '新增管理員需要對方先申請，並由管理員同意';
-  end if;
-  if target = auth.uid() then
-    raise exception '不能取消自己的管理員身分';
-  end if;
-  update public.profiles set is_admin = false where id = target;
-end;
-$$;
-
 -- 會員列表（含 Email 與管理員申請），只有管理員能呼叫
 create function public.admin_list_members()
 returns table (id uuid, email text, display_name text, is_admin boolean, created_at timestamptz, comment_count bigint,
@@ -216,9 +196,6 @@ end;
 $$;
 revoke execute on function public.admin_list_members() from public, anon;
 grant execute on function public.admin_list_members() to authenticated;
-
-revoke execute on function public.set_admin(uuid, boolean) from public, anon;
-grant execute on function public.set_admin(uuid, boolean) to authenticated;
 
 -- ========== 圖片儲存 ==========
 insert into storage.buckets (id, name, public) values ('paintings', 'paintings', true);
