@@ -5,6 +5,7 @@ import { removeImage } from '../lib/storage'
 import { WorkThumb } from '../components/WorkMedia'
 import { ImageImport, VideoImport } from './imports'
 import { AdminPage } from './AdminLayout'
+import CategoryManager from './CategoryManager'
 
 export function useCategories() {
   const [categories, setCategories] = useState([])
@@ -19,7 +20,7 @@ export function useCategories() {
 }
 
 export default function WorksAdmin() {
-  const [categories] = useCategories()
+  const [categories, reloadCategories] = useCategories()
   const [works, setWorks] = useState([])
   const [params, setParams] = useSearchParams()
   const [importTab, setImportTab] = useState(null)
@@ -72,11 +73,22 @@ export default function WorksAdmin() {
         <>
           <button onClick={() => setImportTab(importTab === 'images' ? null : 'images')}>＋ 匯入圖片</button>
           <button onClick={() => setImportTab(importTab === 'video' ? null : 'video')}>＋ 匯入影片</button>
+          <button onClick={() => setImportTab(importTab === 'categories' ? null : 'categories')}>分類管理</button>
         </>
       }
     >
       {importTab === 'images' && <ImageImport categories={categories} onUploaded={load} />}
       {importTab === 'video' && <VideoImport categories={categories} onUploaded={load} />}
+      {importTab === 'categories' && (
+        <CategoryManager
+          categories={categories}
+          works={works}
+          onChange={() => {
+            reloadCategories()
+            load()
+          }}
+        />
+      )}
 
       <div className="admin-toolbar">
         <input type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="搜尋標題或說明…" aria-label="搜尋作品" />

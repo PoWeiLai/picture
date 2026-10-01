@@ -1122,3 +1122,11 @@ textarea { resize: vertical; }
 .avatar-small { width: 26px; height: 26px; font-size: 0.85rem; display: inline-grid; vertical-align: middle; box-shadow: 0 0 0 1px var(--gold-mid); }
 .admin-me { display: flex; align-items: center; gap: 0.5rem; color: var(--ink-soft); }
 .avatar-upload label.button { cursor: pointer; }
+
+/* 作品頁的分類管理 */
+.category-manager { margin-bottom: 1.5rem; }
+.category-manager h2 { margin-top: 0; }
+.category-chips { list-style: none; padding: 0; margin: 0 0 1rem; display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.category-chips li { display: flex; align-items: center; gap: 0.3rem; padding: 0.3rem 0.5rem 0.3rem 0.9rem; border: 1px solid var(--gold-mid); border-radius: 999px; }
+.category-chips .muted { font-size: 0.9em; }
+.category-manager .inline-form { max-width: 480px; }

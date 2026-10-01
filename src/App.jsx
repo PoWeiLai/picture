@@ -9,7 +9,6 @@ import AdminLayout from './admin/AdminLayout'
 import Dashboard from './admin/Dashboard'
 import WorksAdmin from './admin/WorksAdmin'
 import WorkEdit from './admin/WorkEdit'
-import CategoriesAdmin from './admin/CategoriesAdmin'
 import StudioAdmin from './admin/StudioAdmin'
 import CommentsAdmin from './admin/CommentsAdmin'
 import MembersAdmin from './admin/MembersAdmin'
@@ -147,7 +146,6 @@ export default function App() {
         <Route index element={<Dashboard />} />
         <Route path="works" element={<WorksAdmin />} />
         <Route path="works/:id" element={<WorkEdit />} />
-        <Route path="categories" element={<CategoriesAdmin />} />
         <Route path="studio" element={<StudioAdmin key="daily" album="daily" />} />
         <Route path="setup" element={<StudioAdmin key="setup" album="setup" />} />
         <Route path="comments" element={<CommentsAdmin />} />

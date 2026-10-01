@@ -7,7 +7,6 @@ import Avatar from '../components/Avatar'
 const MENU = [
   { to: '/admin', label: '總覽', end: true },
   { to: '/admin/works', label: '作品' },
-  { to: '/admin/categories', label: '分類' },
   { to: '/admin/studio', label: '生活點滴' },
   { to: '/admin/setup', label: '布展活動' },
   { to: '/admin/comments', label: '留言' },
