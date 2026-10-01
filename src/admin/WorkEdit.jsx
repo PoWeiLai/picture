@@ -42,6 +42,9 @@ export default function WorkEdit() {
   if (work === undefined) return <p className="muted">載入中…</p>
   if (work === null) return <p>找不到這件作品。<Link to="/admin/works">回到作品列表</Link></p>
 
+  // 影片回到「影片」列表，畫作回到「作品」列表
+  const listPath = work.video_url ? '/admin/videos' : '/admin/works'
+
   const set = (field) => (e) => setForm({ ...form, [field]: e.target?.value ?? e })
   const videoInvalid = form.video_url && !video
   const needsMedia = !form.video_url && !work.image_path && !newImage
@@ -83,7 +86,7 @@ export default function WorkEdit() {
     const { error } = await supabase.from('paintings').delete().eq('id', work.id)
     if (error) return setMsg('刪除失敗：' + error.message)
     await removeImage(work.image_path)
-    navigate('/admin/works')
+    navigate(listPath)
   }
 
   const previewWork = { ...work, title: form.title, video_url: video?.url ?? null }
@@ -91,7 +94,7 @@ export default function WorkEdit() {
   return (
     <AdminPage
       title="編輯作品"
-      subtitle={<Link to="/admin/works">← 回到作品列表</Link>}
+      subtitle={<Link to={listPath}>{work.video_url ? '← 回到影片列表' : '← 回到作品列表'}</Link>}
       actions={<Link to={`/paintings/${work.id}`} target="_blank" className="button">在前台查看</Link>}
     >
       <form onSubmit={save} className="edit-grid">

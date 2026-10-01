@@ -19,13 +19,14 @@ export function useCategories() {
   return [categories, load]
 }
 
-export default function WorksAdmin() {
+// 後台「作品」（kind = image，只有畫作）與「影片」（kind = video）共用這一頁
+export default function WorksAdmin({ kind = 'image' }) {
+  const isVideo = kind === 'video'
   const [categories, reloadCategories] = useCategories()
   const [works, setWorks] = useState([])
   const [params, setParams] = useSearchParams()
   const [importTab, setImportTab] = useState(null)
   const [query, setQuery] = useState('')
-  const kind = params.get('kind') ?? ''
   const category = params.get('category') ?? ''
 
   const load = useCallback(async () => {
@@ -44,11 +45,11 @@ export default function WorksAdmin() {
     const q = query.trim().toLowerCase()
     return works.filter(
       (w) =>
-        (!kind || (kind === 'video') === Boolean(w.video_url)) &&
-        (!category || String(w.category_id) === category) &&
+        isVideo === Boolean(w.video_url) &&
+        (isVideo || !category || String(w.category_id) === category) &&
         (!q || w.title.toLowerCase().includes(q) || (w.description ?? '').toLowerCase().includes(q)),
     )
-  }, [works, kind, category, query])
+  }, [works, isVideo, category, query])
 
   function setFilter(key, value) {
     const next = new URLSearchParams(params)
@@ -67,14 +68,17 @@ export default function WorksAdmin() {
 
   return (
     <AdminPage
-      title="作品"
-      subtitle={`共 ${works.length} 件，其中影片 ${works.filter((w) => w.video_url).length} 件`}
+      title={isVideo ? '影片' : '作品'}
+      subtitle={`共 ${works.filter((w) => isVideo === Boolean(w.video_url)).length} ${isVideo ? '支影片' : '件畫作'}`}
       actions={
-        <>
-          <button onClick={() => setImportTab(importTab === 'images' ? null : 'images')}>＋ 匯入圖片</button>
+        isVideo ? (
           <button onClick={() => setImportTab(importTab === 'video' ? null : 'video')}>＋ 匯入影片</button>
-          <button onClick={() => setImportTab(importTab === 'categories' ? null : 'categories')}>分類管理</button>
-        </>
+        ) : (
+          <>
+            <button onClick={() => setImportTab(importTab === 'images' ? null : 'images')}>＋ 匯入圖片</button>
+            <button onClick={() => setImportTab(importTab === 'categories' ? null : 'categories')}>分類管理</button>
+          </>
+        )
       }
     >
       {importTab === 'images' && <ImageImport categories={categories} onUploaded={load} />}
@@ -92,17 +96,14 @@ export default function WorksAdmin() {
 
       <div className="admin-toolbar">
         <input type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="搜尋標題或說明…" aria-label="搜尋作品" />
-        <select value={kind} onChange={(e) => setFilter('kind', e.target.value)} aria-label="類型">
-          <option value="">全部類型</option>
-          <option value="image">畫作</option>
-          <option value="video">影片</option>
-        </select>
-        <select value={category} onChange={(e) => setFilter('category', e.target.value)} aria-label="分類">
-          <option value="">全部分類</option>
-          {categories.map((c) => (
-            <option key={c.id} value={c.id}>{c.name}</option>
-          ))}
-        </select>
+        {!isVideo && (
+          <select value={category} onChange={(e) => setFilter('category', e.target.value)} aria-label="分類">
+            <option value="">全部分類</option>
+            {categories.map((c) => (
+              <option key={c.id} value={c.id}>{c.name}</option>
+            ))}
+          </select>
+        )}
       </div>
 
       <div className="panel admin-table-wrap">
@@ -112,7 +113,6 @@ export default function WorksAdmin() {
               <th>作品</th>
               <th>分類</th>
               <th>年份</th>
-              <th>類型</th>
               <th aria-label="操作" />
             </tr>
           </thead>
@@ -127,7 +127,6 @@ export default function WorksAdmin() {
                 </td>
                 <td>{w.categories?.name ?? <span className="muted">未分類</span>}</td>
                 <td>{w.year ?? <span className="muted">—</span>}</td>
-                <td>{w.video_url ? '影片' : '畫作'}</td>
                 <td className="row-actions">
                   <Link to={`/admin/works/${w.id}`}>編輯</Link>
                   <Link to={`/paintings/${w.id}`} target="_blank">前台</Link>
@@ -137,7 +136,7 @@ export default function WorksAdmin() {
             ))}
           </tbody>
         </table>
-        {shown.length === 0 && <p className="muted center">沒有符合條件的作品。</p>}
+        {shown.length === 0 && <p className="muted center">{isVideo ? '沒有符合條件的影片。' : '沒有符合條件的作品。'}</p>}
       </div>
     </AdminPage>
   )

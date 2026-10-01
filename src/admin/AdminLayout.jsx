@@ -5,14 +5,17 @@ import { SITE_NAME } from '../siteConfig'
 import Avatar from '../components/Avatar'
 
 const MENU = [
+  // 前半段和前台導覽列同樣順序
   { to: '/admin', label: '總覽', end: true },
+  { to: '/admin/about', label: '個人自傳' },
+  { to: '/admin/videos', label: '影片' },
   { to: '/admin/works', label: '作品' },
-  { to: '/admin/studio', label: '生活點滴' },
+  { to: '/admin/exhibitions', label: '藝無界、美相遇' },
   { to: '/admin/setup', label: '布展活動' },
-  { to: '/admin/comments', label: '留言' },
+  { to: '/admin/studio', label: '生活點滴' },
   { to: '/admin/messages', label: '私訊' },
+  { to: '/admin/comments', label: '留言' },
   { to: '/admin/members', label: '會員' },
-  { to: '/admin/content', label: '網站內容' },
   { to: '/admin/account', label: '個人設定' },
 ]
 

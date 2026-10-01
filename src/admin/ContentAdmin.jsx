@@ -62,7 +62,7 @@ function HeroForm({ hero }) {
         link: form.link.trim(),
       })
       setFile(null)
-      setMsg('已儲存，前台首頁已更新')
+      setMsg('已儲存，前台已更新')
     } catch (err) {
       setMsg(err.message)
     }
@@ -71,7 +71,8 @@ function HeroForm({ hero }) {
 
   return (
     <form onSubmit={submit} className="panel form">
-      <h2>首頁封面</h2>
+      <h2>主打展覽</h2>
+      <p className="muted">會顯示在「藝無界、美相遇」最上方，也是「作品」頁開頭的封面捲軸。</p>
       <ImageField label="封面畫作圖片" path={hero.image} file={file} onFile={setFile} />
       <div className="field-row">
         <label>封面畫作名稱<input value={form.artworkTitle} onChange={set('artworkTitle')} /></label>
@@ -86,7 +87,7 @@ function HeroForm({ hero }) {
       <label>捲軸底部（日期與地點）<input value={form.exhibition} onChange={set('exhibition')} /></label>
       <label>「展覽介紹」連結（留空則不顯示）<input type="url" value={form.link} onChange={set('link')} /></label>
       {msg && <p className="muted">{msg}</p>}
-      <button type="submit" disabled={busy}>{busy ? '儲存中…' : '儲存首頁封面'}</button>
+      <button type="submit" disabled={busy}>{busy ? '儲存中…' : '儲存主打展覽'}</button>
     </form>
   )
 }
@@ -99,7 +100,6 @@ function ArtistForm({ artist }) {
     paragraphs: (artist.paragraphs ?? []).join('\n\n'),
     quote: artist.quote ?? '',
     awards: (artist.awards ?? []).join('\n'),
-    exhibitions: (artist.exhibitions ?? []).join('\n'),
   })
   const [file, setFile] = useState(null)
   const [busy, setBusy] = useState(false)
@@ -121,10 +121,9 @@ function ArtistForm({ artist }) {
         paragraphs: toParagraphs(form.paragraphs),
         quote: form.quote.trim(),
         awards: toLines(form.awards),
-        exhibitions: toLines(form.exhibitions),
       })
       setFile(null)
-      setMsg('已儲存，前台畫家頁已更新')
+      setMsg('已儲存，前台「個人自傳」已更新')
     } catch (err) {
       setMsg(err.message)
     }
@@ -133,35 +132,76 @@ function ArtistForm({ artist }) {
 
   return (
     <form onSubmit={submit} className="panel form">
-      <h2>畫家介紹</h2>
+      <h2>個人自傳</h2>
       <ImageField label="畫家照片" path={artist.portrait} file={file} onFile={setFile} />
       <div className="field-row">
         <label>姓名<input value={form.name} onChange={set('name')} required /></label>
         <label>學歷／頭銜<input value={form.education} onChange={set('education')} /></label>
       </div>
-      <label>開頭引言（第一頁）<textarea value={form.lead} onChange={set('lead')} rows={3} /></label>
+      <label>開頭介紹<textarea value={form.lead} onChange={set('lead')} rows={3} /></label>
       <label>
-        創作理念段落（段落之間空一行；第一段在第一頁，其餘在第二頁）
+        創作理念（段落之間空一行）
         <textarea value={form.paragraphs} onChange={set('paragraphs')} rows={10} />
       </label>
-      <label>引言金句<textarea value={form.quote} onChange={set('quote')} rows={2} /></label>
-      <div className="field-row">
-        <label>獲獎（一行一項）<textarea value={form.awards} onChange={set('awards')} rows={5} /></label>
-        <label>展覽經歷（一行一項）<textarea value={form.exhibitions} onChange={set('exhibitions')} rows={5} /></label>
-      </div>
+      <label>引言金句（紅字）<textarea value={form.quote} onChange={set('quote')} rows={2} /></label>
+      <label>獲獎（一行一項）<textarea value={form.awards} onChange={set('awards')} rows={4} /></label>
+      <p className="muted">「展覽經歷」請到左側「藝無界、美相遇」修改。</p>
       {msg && <p className="muted">{msg}</p>}
-      <button type="submit" disabled={busy}>{busy ? '儲存中…' : '儲存畫家介紹'}</button>
+      <button type="submit" disabled={busy}>{busy ? '儲存中…' : '儲存個人自傳'}</button>
     </form>
   )
 }
 
-export default function ContentAdmin() {
-  const { hero, artist } = useSiteContent()
+// 展覽經歷清單（存在 artist.exhibitions，前台「個人自傳」與「藝無界、美相遇」都會顯示）
+function ExhibitionListForm({ artist }) {
+  const [text, setText] = useState((artist.exhibitions ?? []).join('\n'))
+  const [busy, setBusy] = useState(false)
+  const [msg, setMsg] = useState('')
+
+  async function submit(e) {
+    e.preventDefault()
+    setBusy(true)
+    setMsg('')
+    try {
+      await saveSetting('artist', { ...artist, exhibitions: toLines(text) })
+      setMsg('已儲存，前台已更新')
+    } catch (err) {
+      setMsg(err.message)
+    }
+    setBusy(false)
+  }
+
+  return (
+    <form onSubmit={submit} className="panel form">
+      <h2>展覽經歷</h2>
+      <label>
+        一行一個展覽，例如：2023　「醉憶金門」油畫創作個展　國立屏東大學
+        <textarea value={text} onChange={(e) => setText(e.target.value)} rows={8} />
+      </label>
+      {msg && <p className="muted">{msg}</p>}
+      <button type="submit" disabled={busy}>{busy ? '儲存中…' : '儲存展覽經歷'}</button>
+    </form>
+  )
+}
+
+// 後台「個人自傳」
+export function AboutAdmin() {
+  const { artist } = useSiteContent()
   // key 讓表單在內容從資料庫載入後重新帶入
   return (
-    <AdminPage title="網站內容" subtitle="修改前台首頁封面與畫家頁，儲存後立即生效">
-      <HeroForm key={JSON.stringify(hero)} hero={hero} />
+    <AdminPage title="個人自傳" subtitle="前台「個人自傳」頁的照片與文字，儲存後立即生效">
       <ArtistForm key={JSON.stringify(artist)} artist={artist} />
+    </AdminPage>
+  )
+}
+
+// 後台「藝無界、美相遇」
+export function ExhibitionsAdmin() {
+  const { hero, artist } = useSiteContent()
+  return (
+    <AdminPage title="藝無界、美相遇" subtitle="前台展覽專區的主打展覽與展覽經歷，儲存後立即生效">
+      <HeroForm key={JSON.stringify(hero)} hero={hero} />
+      <ExhibitionListForm key={JSON.stringify(artist)} artist={artist} />
     </AdminPage>
   )
 }

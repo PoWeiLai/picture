@@ -36,7 +36,7 @@ export default function Dashboard() {
 
   const tiles = [
     { label: '畫作', value: stats?.paintings, to: '/admin/works' },
-    { label: '影片', value: stats?.videos, to: '/admin/works?kind=video' },
+    { label: '影片', value: stats?.videos, to: '/admin/videos' },
     { label: '生活點滴', value: stats?.photos, to: '/admin/studio' },
     { label: '布展活動', value: stats?.setup, to: '/admin/setup' },
     { label: '留言', value: stats?.comments, to: '/admin/comments' },
@@ -81,10 +81,12 @@ export default function Dashboard() {
         <section className="panel">
           <h2>快速動作</h2>
           <ul className="quick-actions">
-            <li><Link to="/admin/works">匯入新畫作或影片</Link></li>
+            <li><Link to="/admin/works">匯入新畫作</Link></li>
+            <li><Link to="/admin/videos">匯入新影片</Link></li>
             <li><Link to="/admin/studio">上傳生活點滴照片</Link></li>
             <li><Link to="/admin/setup">上傳布展活動照片</Link></li>
-            <li><Link to="/admin/content">修改首頁封面與畫家介紹</Link></li>
+            <li><Link to="/admin/about">修改個人自傳</Link></li>
+            <li><Link to="/admin/exhibitions">修改展覽資訊</Link></li>
             <li><Link to="/admin/members">管理會員與管理員</Link></li>
           </ul>
         </section>

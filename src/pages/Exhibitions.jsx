@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import Ornament from '../components/Ornament'
 import { useSiteContent } from '../lib/siteContent'
 
-// 「藝無界、美相遇」：展覽專區，內容沿用後台「網站內容」的封面展覽與展覽經歷
+// 「藝無界、美相遇」：展覽專區，內容在後台「藝無界、美相遇」編輯（主打展覽與展覽經歷）
 export default function Exhibitions() {
   const { hero, artist } = useSiteContent()
   const exhibitions = artist.exhibitions ?? []
