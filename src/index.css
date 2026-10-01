@@ -1050,3 +1050,9 @@ textarea { resize: vertical; }
 .reply-form { margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.5rem; }
 .reply-form textarea { width: 100%; }
 .reply-actions { display: flex; gap: 0.75rem; align-items: center; }
+
+/* 登入、忘記密碼等頁面 */
+.auth-page { max-width: 520px; }
+.admin-login { padding-top: 4rem; }
+.admin-login > .eyebrow { margin: 0; }
+.admin-narrow { max-width: 520px; }

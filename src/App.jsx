@@ -19,6 +19,10 @@ import Studio from './pages/Studio'
 import Exhibitions from './pages/Exhibitions'
 import Contact from './pages/Contact'
 import MessagesAdmin from './admin/MessagesAdmin'
+import AdminLogin from './admin/AdminLogin'
+import AdminAccount from './admin/AdminAccount'
+import ForgotPassword from './pages/ForgotPassword'
+import ResetPassword from './pages/ResetPassword'
 import { isDemo } from './lib/supabase'
 import Ornament from './components/Ornament'
 import { toRoman } from './lib/video'
@@ -83,15 +87,15 @@ function Header() {
   )
 }
 
-// 需要登入才能進入；admin 頁面還必須是管理員（每位管理員各自註冊帳號，再由現任管理員核准）
+// 需要登入才能進入。後台有自己的登入頁（/admin/login），只有管理員帳號能進；
+// 一般會員用前台的「登入會員」（/login），兩個入口分開
 function RequireAuth({ children, admin = false }) {
   const { user, isAdmin, loading, profile } = useAuth()
   const location = useLocation()
   if (loading || (user && !profile)) return <p className="container muted">載入中…</p>
+  if (admin) return isAdmin ? children : <Navigate to="/admin/login" replace />
   // 未登入：先去登入，登入後回到原本要去的頁面
   if (!user) return <Navigate to="/login" replace state={{ from: location.pathname }} />
-  // 已登入但不是管理員：帶到帳戶頁，可以在那裡申請成為管理員
-  if (admin && !isAdmin) return <Navigate to="/account" replace />
   return children
 }
 
@@ -129,8 +133,11 @@ export default function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/account" element={<RequireAuth><Account /></RequireAuth>} />
       </Route>
+      <Route path="/admin/login" element={<AdminLogin />} />
       <Route path="/admin" element={<RequireAuth admin><AdminLayout /></RequireAuth>}>
         <Route index element={<Dashboard />} />
         <Route path="works" element={<WorksAdmin />} />
@@ -142,6 +149,7 @@ export default function App() {
         <Route path="messages" element={<MessagesAdmin />} />
         <Route path="members" element={<MembersAdmin />} />
         <Route path="content" element={<ContentAdmin />} />
+        <Route path="account" element={<AdminAccount />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

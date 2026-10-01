@@ -1,4 +1,5 @@
-import { NavLink, Link, Outlet } from 'react-router-dom'
+import { NavLink, Link, Outlet, useNavigate } from 'react-router-dom'
+import { supabase } from '../lib/supabase'
 import { useAuth } from '../AuthContext'
 import { SITE_NAME } from '../siteConfig'
 
@@ -12,11 +13,18 @@ const MENU = [
   { to: '/admin/messages', label: '私訊' },
   { to: '/admin/members', label: '會員' },
   { to: '/admin/content', label: '網站內容' },
+  { to: '/admin/account', label: '修改密碼' },
 ]
 
 // 後台版面：左側選單 + 內容區，與前台的頁首頁尾分開
 export default function AdminLayout() {
   const { profile } = useAuth()
+  const navigate = useNavigate()
+
+  async function logout() {
+    await supabase.auth.signOut()
+    navigate('/admin/login')
+  }
 
   return (
     <div className="admin-shell">
@@ -33,6 +41,7 @@ export default function AdminLayout() {
         </nav>
         <div className="admin-sidebar-foot">
           <span className="muted">{profile?.display_name}</span>
+          <button type="button" className="link-button" onClick={logout}>登出</button>
           <Link to="/">← 返回前台</Link>
         </div>
       </aside>

@@ -3,15 +3,13 @@ import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../AuthContext'
 import AdminRequest from '../components/AdminRequest'
+import PasswordForm from '../components/PasswordForm'
 
 export default function Account() {
   const { user, profile, isAdmin, refreshProfile } = useAuth()
   const navigate = useNavigate()
   const [displayName, setDisplayName] = useState(profile.display_name)
   const [nameMsg, setNameMsg] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [pwMsg, setPwMsg] = useState('')
 
   async function saveName(e) {
     e.preventDefault()
@@ -21,17 +19,6 @@ export default function Account() {
       .eq('id', user.id)
     setNameMsg(error ? '儲存失敗：' + error.message : '已儲存')
     if (!error) refreshProfile()
-  }
-
-  async function savePassword(e) {
-    e.preventDefault()
-    if (password !== confirmPassword) return setPwMsg('兩次輸入的密碼不一致')
-    const { error } = await supabase.auth.updateUser({ password })
-    setPwMsg(error ? '更新失敗：' + error.message : '密碼已更新')
-    if (!error) {
-      setPassword('')
-      setConfirmPassword('')
-    }
   }
 
   async function logout() {
@@ -55,19 +42,7 @@ export default function Account() {
         <button type="submit">儲存名稱</button>
       </form>
 
-      <form onSubmit={savePassword} className="panel form">
-        <h2>變更密碼</h2>
-        <label>
-          新密碼
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} minLength={6} required autoComplete="new-password" />
-        </label>
-        <label>
-          再輸入一次
-          <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} minLength={6} required autoComplete="new-password" />
-        </label>
-        {pwMsg && <p className="muted">{pwMsg}</p>}
-        <button type="submit">更新密碼</button>
-      </form>
+      <PasswordForm />
 
       <AdminRequest />
     </main>
