@@ -6,10 +6,6 @@ const STORAGE_KEY = 'gallery-music'
 const VOLUME = 0.35
 const FADE_MS = 900
 
-const HARRISON = {
-  performer: 'John Harrison（小提琴）',
-  license: 'CC BY-SA 4.0',
-}
 const commons = (file) => `https://commons.wikimedia.org/wiki/File:${file}`
 
 export const TRACKS = {
@@ -34,18 +30,6 @@ export const TRACKS = {
     license: 'YouTube',
     source: 'https://www.youtube.com/watch?v=ubhkaERcqdw',
   },
-  'spring-1': { src: '/music/vivaldi-spring-1.mp3', title: '韋瓦第〈四季・春〉第一樂章', ...HARRISON, source: commons('Vivaldi_-_Four_Seasons_1_Spring_mvt_1_Allegro_-_John_Harrison_violin.oga') },
-  'spring-2': { src: '/music/vivaldi-spring-2.mp3', title: '韋瓦第〈四季・春〉第二樂章', ...HARRISON, source: commons('Vivaldi_-_Four_Seasons_1_Spring_mvt_2_Largo_-_John_Harrison_violin.oga') },
-  'spring-3': { src: '/music/vivaldi-spring-3.mp3', title: '韋瓦第〈四季・春〉第三樂章', ...HARRISON, source: commons('Vivaldi_-_Four_Seasons_1_Spring_mvt_3_Allegro_-_John_Harrison_violin.oga') },
-  'summer-1': { src: '/music/vivaldi-summer-1.mp3', title: '韋瓦第〈四季・夏〉第一樂章', ...HARRISON, source: commons('Vivaldi_-_Four_Seasons_2_Summer_mvt_1_Allegro_non_molto_-_John_Harrison_violin.oga') },
-  'summer-2': { src: '/music/vivaldi-summer-2.mp3', title: '韋瓦第〈四季・夏〉第二樂章', ...HARRISON, source: commons('Vivaldi_-_Four_Seasons_2_Summer_mvt_2_Adagio_-_John_Harrison_violin.oga') },
-  'summer-3': { src: '/music/vivaldi-summer-3.mp3', title: '韋瓦第〈四季・夏〉第三樂章', ...HARRISON, source: commons('Vivaldi_-_Four_Seasons_2_Summer_mvt_3_Presto_-_John_Harrison_violin.oga') },
-  'autumn-1': { src: '/music/vivaldi-autumn-1.mp3', title: '韋瓦第〈四季・秋〉第一樂章', ...HARRISON, source: commons('Vivaldi_-_Four_Seasons_3_Autumn_mvt_1_Allegro_-_John_Harrison_violin.oga') },
-  'autumn-2': { src: '/music/vivaldi-autumn-2.mp3', title: '韋瓦第〈四季・秋〉第二樂章', ...HARRISON, source: commons('Vivaldi_-_Four_Seasons_3_Autumn_mvt_2_Adagio_molto_-_John_Harrison_violin.oga') },
-  'autumn-3': { src: '/music/vivaldi-autumn-3.mp3', title: '韋瓦第〈四季・秋〉第三樂章', ...HARRISON, source: commons('Vivaldi_-_Four_Seasons_3_Autumn_mvt_3_Allegro_-_John_Harrison_violin.oga') },
-  'winter-1': { src: '/music/vivaldi-winter-1.mp3', title: '韋瓦第〈四季・冬〉第一樂章', ...HARRISON, source: commons('Vivaldi_-_Four_Seasons_4_Winter_mvt_1_Allegro_non_molto_-_John_Harrison_violin.oga') },
-  'winter-2': { src: '/music/vivaldi-winter-2.mp3', title: '韋瓦第〈四季・冬〉第二樂章', ...HARRISON, source: commons('11_-_Vivaldi_Winter_mvt_2_Largo_-_John_Harrison_violin.ogg') },
-  'winter-3': { src: '/music/vivaldi-winter-3.mp3', title: '韋瓦第〈四季・冬〉第三樂章', ...HARRISON, source: commons('12_-_Vivaldi_Winter_mvt_3_Allegro_-_John_Harrison_violin.ogg') },
   air: {
     src: '/music/bach-air.mp3',
     title: '巴哈〈G 弦之歌〉',
