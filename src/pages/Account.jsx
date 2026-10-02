@@ -27,6 +27,19 @@ export default function Account() {
     navigate('/')
   }
 
+  // 註銷帳號：要輸入「註銷」兩個字才會執行，避免誤按
+  async function deleteAccount() {
+    const typed = prompt('註銷後帳號、留言和頭像都會永久刪除，無法復原。\n確定要註銷請輸入「註銷」：')
+    if (typed === null) return
+    if (typed.trim() !== '註銷') return alert('輸入的文字不符，帳號沒有註銷。')
+    const { error } = await supabase.rpc('delete_my_account')
+    if (error) return alert('註銷失敗：' + error.message)
+    if (profile.avatar_path) await supabase.storage.from('avatars').remove([profile.avatar_path])
+    await supabase.auth.signOut()
+    alert('帳號已註銷。')
+    navigate('/')
+  }
+
   return (
     <main className="container narrow">
       <h1>帳戶設定</h1>
@@ -48,6 +61,12 @@ export default function Account() {
       <PasswordForm />
 
       <AdminRequest />
+
+      <section className="panel">
+        <h2>註銷帳號</h2>
+        <p className="muted">永久刪除這個帳號，以及你的留言和頭像，刪除後無法復原。</p>
+        <button type="button" className="link-button danger" onClick={deleteAccount}>註銷帳號</button>
+      </section>
     </main>
   )
 }
