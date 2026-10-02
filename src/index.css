@@ -343,6 +343,8 @@ textarea { resize: vertical; }
 .frame.small::before { inset: 4px; border-width: 1px; }
 .frame.small::after { display: none; }
 .frame img, .frame video, .frame iframe { display: block; width: 100%; }
+/* 畫作一律依原始比例縮放，絕不拉伸變形 */
+.frame-mat img { height: auto; object-fit: contain; }
 
 /* ---------- 畫廊：聚光燈下的沙龍懸掛 ---------- */
 .salon { columns: 3 300px; column-gap: 3rem; }
@@ -466,7 +468,9 @@ textarea { resize: vertical; }
 
 /* ---------- 作品頁 ---------- */
 .back { display: inline-block; margin-bottom: 1.75rem; text-decoration: none; letter-spacing: 0.12em; }
-.artwork { max-height: 78vh; object-fit: contain; }
+/* 畫框貼合畫作大小：直幅、橫幅都不留黑邊、不變形 */
+.frame:has(.artwork) { width: fit-content; max-width: 100%; margin: 0 auto; }
+.frame img.artwork { width: auto; max-width: 100%; max-height: 78vh; margin: 0 auto; }
 .player { width: 100%; background: #000; }
 .player.embed { aspect-ratio: 16 / 9; }
 .player.embed iframe { width: 100%; height: 100%; border: 0; }
