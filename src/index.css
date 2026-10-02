@@ -796,6 +796,16 @@ textarea { resize: vertical; }
 }
 .frame.small-ornate .frame-mat { padding: 3px; }
 
+/* 生活點滴：熱蠟畫介紹 */
+.wax-process { max-width: 960px; margin: 0 auto 4rem; }
+.wax-title { font-size: 3.2rem; letter-spacing: 0.3em; margin: 0; }
+.wax-intro { line-height: 1.9; }
+.wax-intro h3, .wax-step h3 { color: var(--gold); margin: 0 0 0.5rem; }
+.wax-intro ol { margin: 0 0 1rem; padding-left: 1.5rem; }
+.wax-step { margin-top: 2.5rem; }
+.wax-photos { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; align-items: start; }
+.wax-photos .studio-item { margin-bottom: 0; padding-top: 0.5rem; }
+
 /* 放大檢視 */
 .lightbox {
   position: fixed;

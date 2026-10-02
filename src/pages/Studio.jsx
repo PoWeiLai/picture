@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { supabase, imageUrl, formatDate } from '../lib/supabase'
 import Ornament from '../components/Ornament'
 import Lightbox from '../components/Lightbox'
+import WaxProcess from '../components/WaxProcess'
 import { ALBUMS } from '../lib/albums'
 
 // 照片牆：album 為 daily（生活點滴）或 setup（布展活動）
@@ -28,6 +29,8 @@ export default function Studio({ album = 'daily' }) {
         <Ornament />
         <p className="tagline">{info.tagline}</p>
       </header>
+
+      {album === 'daily' && <WaxProcess />}
 
       {photos === null ? (
         <p className="muted center">載入中…</p>
