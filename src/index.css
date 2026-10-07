@@ -992,10 +992,59 @@ textarea { resize: vertical; }
 }
 
 /* 藝無界、美相遇：展覽專區 */
-.exhibit-feature { max-width: 46rem; margin: 0 auto 2.5rem; text-align: center; }
-.exhibit-feature h2 { margin: 0.25rem 0; }
-.exhibit-subtitle { letter-spacing: 0.2em; margin: 0 0 0.5rem; }
-.exhibit-list { max-width: 40rem; margin: 0 auto 2.5rem; }
+.exhibit-section { max-width: 60rem; margin: 0 auto 3rem; }
+.exhibit-heading {
+  text-align: center;
+  color: var(--gold-hi);
+  letter-spacing: 0.4em;
+  margin: 0 0 1.25rem;
+}
+.exhibit-heading::before, .exhibit-heading::after { content: ' ❦ '; color: var(--gold); letter-spacing: 0; }
+.exhibit-list { list-style: none; padding: 0.5rem 2rem; }
+.exhibit-list li {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid rgb(90 66 34 / 0.6);
+  letter-spacing: 0.04em;
+}
+.exhibit-list li:last-child { border-bottom: none; }
+.exhibit-year { color: var(--gold); font-weight: 700; }
+
+.story-card { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 2.25rem; align-items: start; }
+.story-figure { margin: 0; }
+.story-figure .frame { cursor: default; }
+.story-figure figcaption { font-size: 1.15rem; text-align: center; margin-top: 0.75rem; letter-spacing: 0.04em; }
+.story-meta { margin: 0 0 0.5rem; color: var(--ink-soft); font-size: 1.2rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; }
+.story-tag {
+  padding: 0.05rem 0.7rem;
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+  color: var(--gold-hi);
+  font-weight: 700;
+}
+.story-text h3 { margin: 0; font-size: clamp(1.8rem, 4vw, 2.4rem); line-height: 1.4; letter-spacing: 0.08em; color: var(--gold-hi); }
+.story-subtitle { margin: 0 0 1rem; color: var(--ink-soft); letter-spacing: 0.1em; }
+.story-quote {
+  margin: 0 0 1rem;
+  padding: 0.6rem 1rem;
+  border-left: 3px solid var(--crimson);
+  background: rgb(142 27 34 / 0.18);
+  color: var(--gold-hi);
+  font-size: 1.6rem;
+}
+.story-summary { margin: 0 0 1rem; letter-spacing: 0.04em; }
+.story-highlights { margin: 0 0 1.5rem; padding-left: 1.4rem; font-size: 1.3rem; color: var(--ink-soft); }
+.story-highlights li { margin: 0.2rem 0; }
+.story-text .button { margin-top: 0.5rem; }
+
+@media (max-width: 700px) {
+  .story-card { grid-template-columns: 1fr; gap: 1.5rem; }
+  .exhibit-list { padding: 0.25rem 1.25rem; }
+  .exhibit-list li { grid-template-columns: 1fr; gap: 0.1rem; }
+  .exhibit-year:empty { display: none; }
+}
 
 /* 右上角的可愛按鈕：背景音樂、登入會員 */
 .corner-buttons {
