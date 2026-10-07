@@ -3,7 +3,7 @@ import Ornament from '../components/Ornament'
 import { useSiteContent } from '../lib/siteContent'
 import { imageUrl } from '../lib/supabase'
 
-// 媒體報導：新增一篇就在這裡加一筆。摘要與重點用自己的話寫，不要整篇轉貼（報社有版權）
+// 媒體報導（新的放上面）：新增一篇就在這裡加一筆。摘要與重點用自己的話寫，不要整篇轉貼（報社有版權）
 const PRESS = [
   {
     title: '走過白衣歲月，晚來畫出生命的光',
@@ -23,6 +23,20 @@ const PRESS = [
       '2025 澎湖水族館「情繫浯島、菊島」展覽',
     ],
     url: 'https://www.taiwantimes.com.tw/app-container/app-content/new/new-content-detail?blogId=blog-9a5cd936-a269-4352-b951-787e05cf352e&currentCategory=7',
+  },
+  {
+    title: '許培璟護理師變畫家　澎湖水族館浯島菊島畫展',
+    subtitle: '「情繫浯島、菊島–靜謐．自然．美的詩意」',
+    source: '中央社',
+    date: '2025.04.20',
+    image: '/works/xiyu-lighthouse-dusk.jpg',
+    imageCaption: '〈西嶼燈塔的黃昏〉',
+    quote: '細膩的筆觸與色彩變化，呈現澎湖與金門之美。',
+    summary:
+      '重症病房護理師出身，離開職場後重拾童年興趣。幼年隨父親在金門住了十年，' +
+      '把心中的金門聚落、白沙灘與澎湖的碧海藍天畫成這次在澎湖水族館的展覽。',
+    highlights: ['2025.4.20 起於澎湖水族館展出，展期至 9 月底', '油畫、蠟畫及混合媒材'],
+    url: 'https://www.cna.com.tw/news/acul/202504200132.aspx',
   },
 ]
 
@@ -120,7 +134,7 @@ export default function Exhibitions() {
             image={p.image}
             caption={p.imageCaption}
             tag={p.source}
-            meta={`${p.date} · ${p.reporter}`}
+            meta={[p.date, p.reporter].filter(Boolean).join(' · ')}
             title={p.title}
             subtitle={`—${p.subtitle}`}
             quote={p.quote}
