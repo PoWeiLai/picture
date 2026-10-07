@@ -1000,6 +1000,7 @@ textarea { resize: vertical; }
   margin: 0 0 1.25rem;
 }
 .exhibit-heading::before, .exhibit-heading::after { content: ' ❦ '; color: var(--gold); letter-spacing: 0; }
+.exhibit-video { margin: -1rem 0 3rem; }
 .exhibit-list { list-style: none; padding: 0.5rem 2rem; }
 .exhibit-list li {
   display: grid;

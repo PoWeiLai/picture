@@ -109,23 +109,6 @@ export default function Exhibitions() {
         />
       </section>
 
-      {exhibitions.length > 0 && (
-        <section className="exhibit-section">
-          <h2 className="exhibit-heading">展覽經歷</h2>
-          <ul className="panel exhibit-list">
-            {exhibitions.map((e, i) => {
-              const { year, rest } = splitYear(e)
-              return (
-                <li key={i}>
-                  <span className="exhibit-year">{year}</span>
-                  <span>{rest}</span>
-                </li>
-              )
-            })}
-          </ul>
-        </section>
-      )}
-
       <section className="exhibit-section">
         <h2 className="exhibit-heading">媒體報導</h2>
         {PRESS.map((p) => (
@@ -146,9 +129,26 @@ export default function Exhibitions() {
         ))}
       </section>
 
-      <p className="center">
+      <p className="center exhibit-video">
         <Link to="/?kind=video#collection" className="button">觀看展覽報導影片</Link>
       </p>
+
+      {exhibitions.length > 0 && (
+        <section className="exhibit-section">
+          <h2 className="exhibit-heading">展覽經歷</h2>
+          <ul className="panel exhibit-list">
+            {exhibitions.map((e, i) => {
+              const { year, rest } = splitYear(e)
+              return (
+                <li key={i}>
+                  <span className="exhibit-year">{year}</span>
+                  <span>{rest}</span>
+                </li>
+              )
+            })}
+          </ul>
+        </section>
+      )}
     </main>
   )
 }
