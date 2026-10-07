@@ -473,6 +473,27 @@ textarea { resize: vertical; }
 .description { white-space: pre-wrap; margin: 2.25rem auto 0; max-width: 36em; text-align: justify; }
 
 /* 留言簿 */
+/* 作品表情（讚、大心…） */
+.reactions { margin-top: 2.5rem; }
+.reaction-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; }
+.reaction {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  background: transparent;
+  border: 1.5px solid var(--gold);
+  color: var(--ink-soft);
+  font: inherit;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+.reaction:hover:not(:disabled) { transform: translateY(-2px); }
+.reaction.chosen { background: var(--gold); color: #2a1606; font-weight: 700; }
+.reaction-emoji { font-size: 1.35rem; line-height: 1; }
+.reaction-count { font-variant-numeric: tabular-nums; }
+
 .guestbook { margin-top: 4rem; }
 .guestbook h2 { text-align: center; letter-spacing: 0.45em; margin: 0.5rem 0 0; color: var(--gold-hi); }
 .guestbook > .muted { margin-top: 0; }

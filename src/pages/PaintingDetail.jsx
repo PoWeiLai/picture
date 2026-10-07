@@ -8,6 +8,7 @@ import { pour } from '../lib/sounds'
 import ScrollPaper from '../components/ScrollPaper'
 import Ornament from '../components/Ornament'
 import Avatar from '../components/Avatar'
+import Reactions from '../components/Reactions'
 
 export default function PaintingDetail() {
   const { id } = useParams()
@@ -107,6 +108,8 @@ export default function PaintingDetail() {
           <p className="description">{work.description}</p>
         </ScrollPaper>
       )}
+
+      <Reactions key={work.id} paintingId={work.id} />
 
       <section className="guestbook">
         <Ornament />
